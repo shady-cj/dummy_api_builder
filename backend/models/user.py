@@ -9,6 +9,7 @@ class User(db.Model):
     public_id = db.Column(db.String(64), unique=True, nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
+    user_apis = db.relationship('Api', back_populates='user')
 
     def __str__(self):
         return f'User(id={self.id}, email={self.email}, public_id={self.public_id})'
