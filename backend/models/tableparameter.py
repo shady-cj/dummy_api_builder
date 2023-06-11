@@ -32,4 +32,4 @@ class TableParameter(db.Model):
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     table = db.relationship('Table', back_populates='table_parameters')
     constraints = db.relationship('Constraint', secondary=parameter_constraints, backref='table_parameters')
-    entries = db.relationship('Entry', back_populates='tableparameter')
+    entries = db.relationship('Entry', back_populates='tableparameter', cascade="all, delete")

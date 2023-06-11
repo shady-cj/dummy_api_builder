@@ -154,3 +154,15 @@ def show_model(user, api_id, model_id):
         "desc": get_table.description,
         "table_params": tbl_params
         })
+
+
+
+@app_views.route('/my_api/<api_id>/delete_model/<model_id>', methods=["DELETE"])
+@login_required
+def delete_model(user, api_id, model_id):
+    api = Api.query.filter_by(id=api_id, user_id=user.id).first()
+    if not api:
+        return jsonify({"error": "no api of such is associated to the user"})
+    Table.query.filter_by(id=model_id, api_id=api_id).delete()
+    db.session.commit()
+    return jsonify(''), 204

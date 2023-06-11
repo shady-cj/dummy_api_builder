@@ -12,4 +12,4 @@ class Table(db.Model):
     api_id = db.Column(db.Integer, db.ForeignKey('api.id'))
     api = db.relationship('Api', back_populates='tables')
     table_parameters = db.relationship('TableParameter', back_populates='table')
-    entry_lists = db.relationship('EntryList', back_populates='table')
+    entry_lists = db.relationship('EntryList', back_populates='table', cascade="all, delete")
