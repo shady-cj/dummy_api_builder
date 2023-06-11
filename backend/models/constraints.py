@@ -8,10 +8,10 @@ import enum
 
 
 class ValidConstraints(enum.Enum):
-    foreign_key = 'ForeignKey'
+    foreign_key = 'foreign_key'
     unique = 'unique'
     nullable = 'nullable'
-    primarykey = 'primarykey'
+    primary_key = 'primary_key'
 
 class Constraint(db.Model):
     id = db.Column(db.Integer, primary_key=True)
