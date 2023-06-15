@@ -8,6 +8,7 @@ from flask import request, jsonify
 from api.v1.auth.auth import login_required
 from models.api import Api
 from models import db
+from .views_utils import validate_name
 
 
 @app_views.route('/my_apis')
@@ -59,10 +60,12 @@ def create_new_api(user):
     data = request.get_json()
     name = data.get('name')
     description = data.get('description')
-    if not name or len(name) < 1:
+    if not name:
         return jsonify({"error": "name of the api must be provided"})
     if Api.query.filter_by(name=name, user_id = user.id).first():
         return jsonify({"error": "name with api already exists for this user"})
+    if not validate_name(name):
+        return jsonify({"error": "Api name must be a valid python identifier, not a keyword and must be atleast 3 letters"}), 400
     new_api = Api(name=name, description=description, user_id=user.id)
     db.session.add(new_api)
     db.session.commit()
@@ -77,10 +80,11 @@ def update_api_info(user, id):
     name = data.get('name')
     description = data.get('description')
     api = Api.query.filter_by(id=id, user_id=user.id).first()
-    print(api)
     if not api:
-        return jsonify({"error": f"api with id {id} doesn't exist"})
-    if name:
+        return jsonify({"error": f"api with id {id} doesn't exist"}), 400
+    if api.tables:
+        return jsonify({"error": "You cannot update an api with tables"}), 400
+    if name and validate_name(name):
         api.name = name
     if description:
         api.description = description

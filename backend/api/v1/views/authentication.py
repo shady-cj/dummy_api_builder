@@ -25,7 +25,8 @@ def signup():
     if user:
         return make_response('Account already exists, please login', 202)
     hash_password = generate_password_hash(password)
-    user = User(email=email, password=hash_password)
+    api_token = f'{str(uuid.uuid4())}-{str(uuid.uuid4())}'
+    user = User(email=email, password=hash_password, api_token=api_token)
     db.session.add(user)
     db.session.commit()
     return make_response('Account registered successfully', 201)
@@ -64,6 +65,16 @@ def login():
         }, app.config['SECRET_KEY'])
         return jsonify({'token': token.decode('utf-8')}), 200
     return jsonify({'error': 'Incorrect email or password'}), 400
+
+
+@app_views.route('/me')
+@login_required
+def get_me(user):
+    details = {
+        "email": user.email,
+        "api_token": user.api_token
+    }
+    return jsonify(details), 200
 
 
 @app_views.route('/logout', methods=['POST'])

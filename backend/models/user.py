@@ -8,6 +8,7 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     public_id = db.Column(db.String(64), unique=True, nullable=True)
     email = db.Column(db.String(100), unique=True, nullable=False)
+    api_token = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(100), nullable=False)
     user_apis = db.relationship('Api', back_populates='user')
 
