@@ -32,6 +32,8 @@ def add_entry(api_token, api_name, model_name):
     if request.method == "POST":
         data = request.get_json()
         entries = data.get("entries") or []
+        if type(entries) != list or len(entries) != len(table.table_parameters):
+            return jsonify({"error": "Incomplete fields for the model"}), 400
         e_list = EntryList(table_id = table.id)
         db.session.add(e_list)
         db.session.commit()
@@ -40,32 +42,37 @@ def add_entry(api_token, api_name, model_name):
         for entry in entries:
             entry_name = entry.get("name")
             entry_value = entry.get("value")
-            rel_key = f"{tbl_p.foreign_key_reference_field}->{api.name}.{table.name}.{entry_name}" # incase of foreign key
-            tbl_p = TableParameter.query.filter_by(name=entry_name, table_id=table.id)
+            tbl_p = TableParameter.query.filter_by(name=entry_name, table_id=table.id).first()
             if not tbl_p:
-                EntryList.query.filter_by(id=e_list.id).delete()
                 checkpoint.rollback()
+                EntryList.query.filter_by(id=e_list.id).delete()
+                db.session.commit()
                 return jsonify({"error": "such model name doesn't exist"}), 400
+            rel_key = f"{tbl_p.foreign_key_reference_field}->{api.name}.{table.name}.{entry_name}" # incase of foreign key
             stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p)
             if const_type == "nullable" and stat:
                 continue
             if not stat and const_type == "uniq":
-                EntryList.query.filter_by(id=e_list.id).delete()
                 checkpoint.rollback()
+                EntryList.query.filter_by(id=e_list.id).delete()
+                db.session.commit()
                 return jsonify({"error": err_msg}), 400
             if not stat and const_type == "fk":
-                EntryList.query.filter_by(id=e_list.id).delete()
                 checkpoint.rollback()
+                EntryList.query.filter_by(id=e_list.id).delete()
                 Relationship.query.filter_by(fk_rel=rel_key).delete()
+                db.session.commit()
                 return jsonify({"error": err_msg}), 400
             if not validate_entry_value(entry_value, tbl_p.data_type.name):
-                EntryList.query.filter_by(id=e_list.id).delete()
                 checkpoint.rollback()
+                EntryList.query.filter_by(id=e_list.id).delete()
+                db.session.commit()
                 return jsonify({"error": "Wrong data type passed."}), 400
             if not validate_entry_value_length(entry_value, tbl_p.data_type.name, tbl_p.dataType_length):
-                EntryList.query.filter_by(id=e_list.id).delete()
                 checkpoint.rollback()
-                return jsonify({"error": "max length of data exceeded"})
+                EntryList.query.filter_by(id=e_list.id).delete()
+                db.session.commit()
+                return jsonify({"error": f"max length of '{entry_name}' exceeded"}), 400
             if tbl_p.primary_key:
                 primary_keys.append({"id": tbl_p.id, "value": entry_value})
             e = Entry(value=entry_value, tableparameter_id=tbl_p.id, entry_list_id=e_list.id)
@@ -79,8 +86,9 @@ def add_entry(api_token, api_name, model_name):
                         relationship.entrylists.append(e_list)
                         db.session.add(relationship)
                     except:
-                        EntryList.query.filter_by(id=e_list.id).delete()
                         checkpoint.rollback()
+                        EntryList.query.filter_by(id=e_list.id).delete()
+                        db.session.commit()
                         return jsonify({"error": "Could not reference the foreign key id"}), 400
             db.session.add(e)
         primary_keys_sorted = sorted(primary_keys, key=lambda x: x["id"])
@@ -89,8 +97,41 @@ def add_entry(api_token, api_name, model_name):
         if EntryList.query.filter_by(table_id=table.id, primary_key_value=primary_key_value).first():
             checkpoint.rollback()
             EntryList.query.filter_by(id=e_list.id).delete()
+            db.session.commit()
             return jsonify({"error": "Primary key already exist"}), 400
         
         e_list.primary_key_value = primary_key_value
         db.session.commit()
-        return jsonify({"message": "Entry Created"}), 201
+        e_data = {entry.tableparameter.name: entry.value for entry in e_list.entries}            
+        return jsonify(e_data), 201
+    
+    elif request.method == "GET":
+        args = dict(request.args)
+        print(args)
+        data = []
+        if args:
+            found_valid_arg = False # if params passed in are valid or not
+            get_entryLists = EntryList.query.filter_by(table_id=table.id)
+            for entry_list in get_entryLists:
+                entry_data = {}
+                get_entries = Entry.query.filter_by(entry_list_id=entry_list.id)
+                filter_in = False
+                for entry in get_entries:
+                    tp_name = entry.tableparameter.name
+                    if tp_name in args:
+                        found_valid_arg = True
+                        if args[tp_name] == entry.value:
+                            filter_in = True
+                    entry_data[tp_name] = entry.value
+                if filter_in:
+                    data.append(entry_data)
+            if not found_valid_arg: # if none was valid then just return all
+                data = []
+                for entry_list in table.entry_lists:
+                    if entry_list.entries:
+                        data.append({entry.tableparameter.name: entry.value for entry in entry_list.entries})
+        else:
+            for entry_list in table.entry_lists:
+                if entry_list.entries:
+                    data.append({entry.tableparameter.name: entry.value for entry in entry_list.entries})
+        return jsonify(data), 200

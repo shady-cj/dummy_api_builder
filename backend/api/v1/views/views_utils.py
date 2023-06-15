@@ -84,6 +84,7 @@ def validate_entry_value_length(value, type, length):
 def validate_entry_constraints(value, tbl_p):
     fk = None
     for const in tbl_p.constraints:
+        const = const.name
         if const.name == "nullable":
             if not value:
                 return True, "nullable", None
@@ -106,5 +107,5 @@ def validate_entry_constraints(value, tbl_p):
         if const.name == "unique":
             from models.entry import Entry
             if Entry.query.filter_by(tableparameter_id=tbl_p.id, value=value).first():
-                return False, "uniq", "Value already exists in the database. It must be unique"
-        return True, fk, None
+                return False, "uniq", f"{value} already exists in the database. It must be unique"
+    return True, fk, None
