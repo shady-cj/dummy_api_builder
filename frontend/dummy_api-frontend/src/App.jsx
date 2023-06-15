@@ -5,11 +5,20 @@ import Hero from "./components/Hero"
 import About from "./components/About"
 
 function App() {
-
+  const navs = [
+    {
+      title: "LOGIN",
+      path: '/login'
+    },
+    {
+      title: "SIGN UP",
+      path: '/register'
+    }
+  ]
   return (
     <>
       <div>
-        <Header />
+        <Header navs={navs} type="landing" />
         <main className='landing-main-block'>
           <Hero />
           <About />
