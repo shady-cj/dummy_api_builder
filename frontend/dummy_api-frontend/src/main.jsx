@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import Login from './pages/Login'
 import Register from './pages/Register'
+import MyApi from './pages/MyApi'
 import './index.scss'
 import {
   createBrowserRouter,
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
 
     path: '/register',
     element: <Register />
+  },
+  {
+    path: '/my_apis',
+    element: <MyApi />
   }
 ]);
 

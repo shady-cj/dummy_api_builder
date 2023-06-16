@@ -56,6 +56,25 @@
                         background-color: lighten($primary_color, 10%)
                     }
                 }
+                .form-card {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    height: 1.5rem;
+                    transition: height 0.4s ease-in;
+                    font-size: 0.6rem;
+                    border-radius: 5px;
+                }
+                .form-error-card {
+                    background-color: red
+                }
+                .form-redirect-card {
+                    background-color: orangered;
+                }
+                .form-success-card {
+                    background-color: green;
+                }
             }
             a {
                 font-size: 0.6rem;
@@ -68,4 +87,8 @@
             }
         }
     }
+}
+
+@mixin MainPageDefault {
+    min-height: calc(100vh - 4.5rem);
 }

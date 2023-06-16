@@ -1,11 +1,12 @@
 import './index.scss'
 import desktop_logo from "../../assets/icon_lite_desktop.svg"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 const index = ({ navs, activeNav, type }) => {
+    const navigate = useNavigate();
     return (
         <header>
             <div>
-                <img src={desktop_logo} alt="" />
+                <img src={desktop_logo} alt="" onClick={() => navigate('/')} />
                 <ul>
                     {navs.map((nav, index) => {
 
