@@ -1,49 +1,103 @@
-# Dummy API Builder {.text-3xl .font-bold }
+				                                    # DummyApi Builder
+		## "Easily create API, Streamline your work flow with ease, Confidence in data manipulation and Data managment."
+## "Easily create API, Streamline your work flow with ease, Confidence in data manipulation and Data managment."
 
-A simple API building tool for creating dummy APIs for testing and development.
 
-## Features {.text-lg. font-semibold}
+## Features
 
-- Generates random RESTful API endpoints with GET, POST, PUT and DELETE requests
-- Supports customization of endpoint paths and request parameters  
-- Parameters can be strings, numbers, dates, enums, etc.
-- Options to generate sample JSON response bodies
-- Export API definitions as OpenAPI Specification (YAML/JSON) or API Blueprint format
-- Ability to save and load API definitions
+- [x] Supports GET, POST, PUT and DELETE requests
+- [x] Generates random REST API endpoints 
+- [x] Allows customization of endpoint paths
+- [x] Can generate string, number, date and enum parameters
+- [x] Generates sample JSON response bodies 
+- [x] Option to save and load API definitionsea 
+- [x] Integration with API tools
+- [x] Automated API testing
+- [x] Modeling of relationships between API resources 
+- [x] Support for generating sample API code in multiple languages
 
-<div class ="badges">  
-![GitHub release](https://img.shields.io/github/release/yourusername/dummy-api-builder.svg) 
-![GitHub All Releases](https://img.shields.io/github/downloads/yourusername/dummy-api-builder/total.svg)  
-![GitHub issues by-label](https://img.shields.io/github/issues/yourusername/dummy-api-builder/help%20wanted.svg)  
-</div>
+### Why You Should Use DummyApi
 
-## Getting Started {.text-lg.font-semibold}
+| --- | :---: | :---: | :---: |
 
-### Installation {.text-base.font-medium}
 
-Download the latest version from the [releases page](https://github.com/yourusername/dummy-api-builder/releases).
+| 📆 Reusable |  | | ✓ |
 
-### Usage {.text-base.font-medium}
+| 🌈 Facilitate | | | ✓ |
 
-1. Open the Dummy API Builder application
-2. Click "New API" 
-3. Enter an API name and version
-4. Click "+ Add Endpoint" to add REST endpoints  
-5. Define endpoint paths and request/response parameters
-6. Click "Generate API" to generate sample API definitions
-7. Choose format (OpenAPI or API Blueprint) and save/export definitions
+| 🗣️ Saves Time | | | ✓ |
 
-## Documentation
+| 🏷 Increases Productivity | | | ✓ |
 
-...
+| 📝 Easy Integration | | | ✓ |
 
-This uses Tailwind CSS utility classes to style the headers and badges:
+| 🎡 Easy to Use | |  | ✓ |
 
-- .text-3xl - Sets font size to 3xl 
-- .font-bold - Sets font weight to bold
-- .text-lg - Sets font size to lg
-- .font-semibold - Sets font weight to semibold
-- .text-base - Sets font size to base 
-- .font-medium - Sets font weight to medium
+| 🚦 Documentation | |  | ✓ |
 
-Hope this helps provide a fully featured README with styled headers, badges and metadata! Let me know if you have any other questions.
+| 🍰 Flexibility | | | ✓ |
+
+### Overview
+#### Easily Create API
+With our powerful web application, you'll effortlessly create APIs in no time, empowering you to perform essential CRUD operations (Create, Retrieve, Update, Delete) on your data.
+
+### Streamline Your Workflow with Ease
+Effortlessly define your API structure, model your data, and let Dummy API builder handle the heavy lifting, so you can enjoy a streamlined workflow.
+
+### Confidence in Data Manipulation
+Dummy API builder equips you with the tools and functionality to manipulate your data confidently. It gives you full control over your data management tasks.
+
+### Data Management
+It offers an intuitive approach, eliminating unnecessary complexities and time-consuming processes. With Dummy API builder, you can make the most of your data without hassle.
+
+
+### Requirements:
+
+
+
+## Contributors
+
+* **Peter Erinfolami** 
+    * **Github** (https://github.com/shady-cj)
+    * **Linkdin** www.linkedin.com/in/erinfolamipeter/
+    * **Email** petersp2000@gmail.com
+    * **Twitter** https://twitter.com/shady_cj
+
+* **Kehinde Owolabi**
+    * **Github** https://github.com/owolabi250
+    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
+    * **Email** owolabikehinde250@gmail.com
+    * **Twitter** https://twitter.com/Elder_Choco
+
+* **Kehinde Owolabi**
+    * **Github** https://github.com/owolabi250
+    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
+    * **Email** owolabikehinde250@gmail.com
+    * **Twitter** https://twitter.com/Elder_Choco
+
+* **Kehinde Owolabi**
+    * **Github** https://github.com/owolabi250
+    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
+    * **Email** owolabikehinde250@gmail.com
+    * **Twitter** https://twitter.com/Elder_Choco
+
+## Contributing
+
+Like **DummyApi Builder**? Thanks!!!
+
+At the same time, we need your help
+
+### Finding Bugs
+
+DummyApi is just getting started. If you could help us find or fix potential bugs, we would be grateful!
+
+Have a bug or a feature request? [Please open a new issue](https://github.com/issues)
+
+### New Features
+
+Have some awesome ideas? Feel free to open an issue or submit your pull request directly!
+
+### Documentation improvements.
+
+Improvements to README and documentation are welcome at all times, whether typos or our lame English. 🤣.
+
