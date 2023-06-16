@@ -1,0 +1,71 @@
+@mixin auth_page {
+    min-height: calc(100vh - 4.5rem);
+    background-color: $secondary_color;
+    div.auth-section-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 2em;
+        padding: 2rem 0;
+        img {
+            width: clamp(8rem, 25%, 13rem);
+            height: auto;
+            object-fit: cover;
+        }
+        section {
+            width: clamp(12rem, 30%, 16rem);
+            display: flex;
+            flex-direction: column;
+            gap: 0.8em;
+            form {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 0.8em;
+                div {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.2em;
+                    label {
+                        font-size: 0.7rem;
+                        color: $primary_color;
+                    }
+                    input {
+                        padding: 0.4rem 0.3rem;
+                        border: none;
+                        &:focus {
+                            outline: none
+                        }
+                    }
+                }
+                button {
+                    padding: 0.4rem 0;
+                    background-color: $primary_color;
+                    border: none;
+                    border-radius: 4px;
+                    text-transform: uppercase;
+                    color: white;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: background-color 0.4s ease;
+                    &:hover,
+                    &:focus,
+                    &:active {
+                        outline: none;
+                        background-color: lighten($primary_color, 10%)
+                    }
+                }
+            }
+            a {
+                font-size: 0.6rem;
+                text-decoration: none;
+                color: $primary_color;
+                transition: color 0.4s ease;
+                &:hover {
+                    color: lighten($primary_color, 8%);
+                }
+            }
+        }
+    }
+}

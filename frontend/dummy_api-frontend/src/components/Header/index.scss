@@ -48,6 +48,7 @@ header {
                 background-color: white;
                 padding: 0.1em 0.25em;
                 border-radius: 4px;
+                transition: background-color 0.4s ease-in;
                 a {
                     color: $primary_color;
                     &:hover,

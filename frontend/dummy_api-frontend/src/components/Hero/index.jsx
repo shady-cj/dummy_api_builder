@@ -7,7 +7,7 @@ const index = () => {
         <section className="hero_section">
             <div>
                 <img src={desktop_logo} alt="dummy api Builder" />
-                <Link to='register'>Get Started</Link>
+                <Link to='/register'>Get Started</Link>
             </div>
         </section>
     )
