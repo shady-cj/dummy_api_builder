@@ -91,7 +91,7 @@ At the same time, we need your help
 
 DummyApi is just getting started. If you could help us find or fix potential bugs, we would be grateful!
 
-Have a bug or a feature request? [Please open a new issue](https://github.com/issues)
+Have a bug or a feature request? [Please open a new issue](https://github.com/shady-cj/dummy_api_builder/issues)
 
 ### New Features
 
