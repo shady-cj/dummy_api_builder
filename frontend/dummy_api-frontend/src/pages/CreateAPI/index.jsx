@@ -1,7 +1,7 @@
-import "./index.scss"
-import Header from "../../components/Header"
-import DetailPage from "../../components/DetailPage"
-import Sidebar from "../../components/Sidebar"
+import "./index.scss";
+import Sidebar from "../../components/Sidebar";
+import Header from "../../components/Header";
+import FormCreatePage from "../../components/FormCreateApi";
 
 const index = () => {
     const navs = [
@@ -16,10 +16,10 @@ const index = () => {
     ]
     return (
         <div>
-            <Header navs={navs} activeNav="MY APIS" />
+            <Header navs={navs} activeNav="CREATE NEW API" />
             <section className="my_api_body">
                 <Sidebar />
-                <DetailPage />
+                <FormCreatePage />
             </section>
         </div>
     )

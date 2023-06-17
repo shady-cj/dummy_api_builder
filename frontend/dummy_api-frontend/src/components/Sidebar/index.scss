@@ -1,2 +1,99 @@
 @import "../../styles/variables";
 @import "../../styles/mixins";
+div.sidebar_wrapper {
+    height: 100%;
+    background-color: $secondary_color;
+    flex-basis: 30%;
+    font-family: $roboto_font;
+    position: relative;
+    section.my_api_header {
+        padding: 1.1rem;
+        display: flex;
+        justify-content: center;
+        gap: 1.3em;
+        align-items: center;
+        h2 {
+            text-align: center;
+            color: $primary_color;
+            font-size: 1rem;
+        }
+        img {
+            width: 0.5rem;
+            height: auto;
+        }
+    }
+    section.my_api_list {
+        display: flex;
+        align-items: center;
+        flex-direction: column;
+        gap: 0.5em;
+        overflow-y: auto;
+        height: 68%;
+        &::-webkit-scrollbar {
+            width: 10px;
+        }
+        /* Track */
+        &::-webkit-scrollbar-track {
+            border-radius: 7px;
+            //     background-color: darken($secondary_color, 5%);
+        }
+        /* Handle */
+        &::-webkit-scrollbar-thumb {
+            background-color: lighten($primary_color_light, 15%);
+            border-radius: 7px;
+            &:hover {
+                background-color: darken($primary_color, 5%);
+            }
+        }
+        article {
+            width: calc(100% - 10px);
+            font-size: 0.8rem;
+            padding: 0.7rem 0;
+            padding-left: 1.5rem;
+            background-color: white;
+            box-shadow: 0 0 2px 0.2px darken(white, 30%);
+            border-radius: 6px;
+            color: $primary_color;
+            cursor: pointer;
+            transition: background-color 0.4s ease-in;
+            &:hover {
+                background-color: lighten($primary_color, 50%);
+            }
+        }
+        article.active {
+            background-color: $primary_color;
+            color: white;
+            box-shadow: 0 0 2px 0.2px darken($primary_color, 30%);
+            &:hover {
+                background-color: lighten($primary_color, 10%);
+            }
+        }
+    }
+    section.my_api_create_btn {
+        width: 100%;
+        position: absolute;
+        bottom: 1rem;
+        display: flex;
+        justify-content: center;
+        div {
+            cursor: pointer;
+            padding: 0.6rem 1.5rem;
+            width: 90%;
+            background-color: white;
+            border-radius: 7px;
+            color: $primary_color;
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: flex;
+            gap: 1.3rem;
+            box-shadow: 0 0 2px 0.2px darken(white, 30%);
+            img {
+                width: 1rem;
+            }
+            transition: background-color 0.4s ease-in;
+            &:hover {
+                background-color: lighten($primary_color, 50%);
+            }
+        }
+    }
+}

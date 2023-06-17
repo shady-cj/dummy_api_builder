@@ -1,13 +1,17 @@
-import React from 'react'
-
+import "./index.scss"
+import caretLogo from "../../assets/caret-blue.svg"
+import newIcon from "../../assets/create-new-icon.svg"
+import { useNavigate } from "react-router-dom"
 const index = () => {
+    const navigate = useNavigate();
+
     return (
-        <div>
+        <div className="sidebar_wrapper">
             <section className='my_api_header'>
-                <h2>MY APIs</h2>
+                <h2>MY APIs</h2> <img src={caretLogo} />
             </section>
             <section className='my_api_list'>
-                <article>
+                <article className="active">
                     API 1
                 </article>
                 <article>
@@ -18,8 +22,8 @@ const index = () => {
                 </article>
             </section>
             <section className='my_api_create_btn'>
-                <div>
-
+                <div onClick={() => navigate("/my_apis/create")}>
+                    <img src={newIcon} alt="" />
                     CREATE
                 </div>
             </section>

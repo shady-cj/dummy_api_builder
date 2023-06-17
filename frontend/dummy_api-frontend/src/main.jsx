@@ -4,6 +4,7 @@ import App from './App.jsx'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import MyApi from './pages/MyApi'
+import CreateAPI from "./pages/CreateAPI"
 import './index.scss'
 import {
   createBrowserRouter,
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
   {
     path: '/my_apis',
     element: <MyApi />
+  },
+  {
+    path: '/my_apis/create',
+    element: <CreateAPI />
   }
 ]);
 
