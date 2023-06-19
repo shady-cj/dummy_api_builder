@@ -1,4 +1,5 @@
 from flask import Flask, jsonify
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 load_dotenv()
@@ -8,7 +9,9 @@ app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 app.config['SECRET_KEY'] = os.getenv('SECRET')
+
 app.register_blueprint(app_views)
+CORS(app)
 
 @app.route('/')
 def index():
@@ -20,4 +23,4 @@ if __name__ == "__main__":
     db.init_app(app)
     with app.app_context():
         db.create_all()
-    app.run(port=5900, debug=True)
+    app.run(host='0.0.0.0',port=5900, debug=True)

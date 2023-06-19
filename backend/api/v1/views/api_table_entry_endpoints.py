@@ -107,7 +107,6 @@ def add_entry(api_token, api_name, model_name):
     
     elif request.method == "GET":
         args = dict(request.args)
-        print(args)
         data = []
         if args:
             found_valid_arg = False # if params passed in are valid or not

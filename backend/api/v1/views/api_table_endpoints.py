@@ -61,7 +61,7 @@ def create_model(user, api_id):
                 return jsonify({"error": "invalid name(must be a valid python identifier) and not a python keyword"}), 400
             try:
                 if param_dt_length:
-                    param_dt_length = int(param_dt_length)
+                    param_dt_length = int(param_dt_length) or None
             except ValueError:
                 return jsonify({"error": "invalid data type length"})
             p = TableParameter(name=param_name, data_type=param_dt, dataType_length=param_dt_length, table_id=new_table.id)
