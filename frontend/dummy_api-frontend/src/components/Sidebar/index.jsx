@@ -11,13 +11,13 @@ const index = () => {
                 <h2>MY APIs</h2> <img src={caretLogo} />
             </section>
             <section className='my_api_list'>
-                <article className="active">
+                <article className="active" onClick={() => navigate("/my_apis/1")}>
                     API 1
                 </article>
-                <article>
+                <article onClick={() => navigate("/my_apis/1")}>
                     API 2
                 </article>
-                <article>
+                <article onClick={() => navigate("/my_apis/1")}>
                     API 3
                 </article>
             </section>

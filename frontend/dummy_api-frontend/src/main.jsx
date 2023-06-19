@@ -5,6 +5,9 @@ import Login from './pages/Login'
 import Register from './pages/Register'
 import MyApi from './pages/MyApi'
 import CreateAPI from "./pages/CreateAPI"
+import MyApiDetail from "./pages/MyApiDetail"
+import ModelPage from "./pages/ModelPage"
+import CreateModel from "./pages/CreateModel"
 import './index.scss'
 import {
   createBrowserRouter,
@@ -27,12 +30,27 @@ const router = createBrowserRouter([
   },
   {
     path: '/my_apis',
-    element: <MyApi />
+    element: <MyApi />,
+    children: [
+      {
+        path: ":apiId",
+        element: <MyApiDetail />
+      },
+      {
+        path: "create",
+        element: <CreateAPI />
+      },
+      {
+        path: ":apiId/model/create",
+        element: <CreateModel />
+      },
+      {
+        path: ":apiId/model/:modelsId",
+        element: <ModelPage />
+      },
+
+    ]
   },
-  {
-    path: '/my_apis/create',
-    element: <CreateAPI />
-  }
 ]);
 
 

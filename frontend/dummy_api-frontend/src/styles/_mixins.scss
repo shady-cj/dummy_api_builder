@@ -92,3 +92,100 @@
 @mixin MainPageDefault {
     height: calc(100vh - 2.5rem);
 }
+
+@mixin detailHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    margin-bottom: 0.5rem;
+    color: $primary_color_light;
+    h2 {
+        padding: 0;
+        margin: 0;
+        font-size: 1.1rem;
+    }
+    p {
+        font-size: 0.6rem;
+        font-style: italic;
+        text-align: justify;
+        text-justify: auto;
+    }
+}
+
+@mixin detailFooter {
+    position: absolute;
+    bottom: 0;
+    width: calc(100% - 1.6rem);
+    height: 3rem;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    button {
+        padding: 0.6rem 1rem;
+        border-radius: 3px;
+        border: none;
+        background-color: $primary_color;
+        color: white;
+        cursor: pointer;
+        outline: none;
+        font-weight: 600;
+        transition: background-color 0.5s ease-in-out;
+        &:hover {
+            background-color: lighten($primary_color, 10%);
+        }
+    }
+}
+
+@mixin scrollbar {
+    &::-webkit-scrollbar {
+        width: 10px;
+    }
+    /* Track */
+    &::-webkit-scrollbar-track {
+        background-color: darken($secondary_color, 5%);
+        border-radius: 7px;
+    }
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+        background-color: lighten($primary_color_light, 15%);
+        border-radius: 7px;
+        &:hover {
+            background-color: darken($primary_color, 5%);
+        }
+    }
+}
+
+@mixin basic_form_div {
+    width: 100%;
+    padding: 0.8rem 1rem;
+    display: flex;
+    border-bottom: 1px solid $primary_color;
+    flex-flow: row wrap;
+    border-radius: 5px;
+    gap: 2rem;
+    label {
+        flex-basis: calc(25% - 2rem);
+        font-size: 0.8rem;
+    }
+    input,
+    textarea {
+        flex-basis: calc(75% - 2rem);
+        padding: 0.3rem 0.2rem;
+        outline: none;
+        border: 1px solid lighten($primary_color, 20%);
+        border-radius: 5px;
+        color: $primary_color;
+        &:focus,
+        &:active {
+            outline: none;
+            box-shadow: 0 0 5px $primary_color;
+        }
+    }
+    textarea {
+        resize: vertical;
+        height: 4rem;
+        font-family: $sora_font;
+        max-height: 10rem;
+    }
+}

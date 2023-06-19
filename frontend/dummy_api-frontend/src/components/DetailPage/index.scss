@@ -1,26 +1,12 @@
 @import "../../styles/variables";
+@import "../../styles/mixins";
 div.detail-wrapper {
     flex-basis: 70%;
     padding: 1.5rem 0.8rem;
     position: relative;
     overflow: hidden;
     section.detail_header {
-        display: flex;
-        flex-direction: column;
-        gap: 1em;
-        margin-bottom: 0.5rem;
-        color: $primary_color_light;
-        h2 {
-            padding: 0;
-            margin: 0;
-            font-size: 1.1rem;
-        }
-        p {
-            font-size: 0.6rem;
-            font-style: italic;
-            text-align: justify;
-            text-justify: auto;
-        }
+        @include detailHeader;
     }
     section.detail-list_models {
         display: flex;
@@ -30,22 +16,7 @@ div.detail-wrapper {
         padding-bottom: 0.3rem;
         height: 72%;
         overflow-y: auto;
-        &::-webkit-scrollbar {
-            width: 10px;
-        }
-        /* Track */
-        &::-webkit-scrollbar-track {
-            background-color: darken($secondary_color, 5%);
-            border-radius: 7px;
-        }
-        /* Handle */
-        &::-webkit-scrollbar-thumb {
-            background-color: lighten($primary_color_light, 15%);
-            border-radius: 7px;
-            &:hover {
-                background-color: darken($primary_color, 5%);
-            }
-        }
+        @include scrollbar;
         article {
             border-bottom: 1px solid $primary_color_light;
             border-radius: 5px;
@@ -72,27 +43,6 @@ div.detail-wrapper {
         color: $primary_color_light;
     }
     section.detail_footer {
-        position: absolute;
-        bottom: 0;
-        width: calc(100% - 1.6rem);
-        height: 3rem;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 1rem;
-        button {
-            padding: 0.6rem 1rem;
-            border-radius: 3px;
-            border: none;
-            background-color: $primary_color;
-            color: white;
-            cursor: pointer;
-            outline: none;
-            font-weight: 600;
-            transition: background-color 0.5s ease-in-out;
-            &:hover {
-                background-color: lighten($primary_color, 10%);
-            }
-        }
+        @include detailFooter
     }
 }
