@@ -1,0 +1,17 @@
+@import "../../styles/variables";
+footer {
+    width: 100%;
+    background-color: $secondary_color;
+    height: 2rem;
+    border-top: 1px solid lighten(black, 40%);
+    p {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 0.55rem;
+        font-weight: 300;
+        color: black;
+    }
+}

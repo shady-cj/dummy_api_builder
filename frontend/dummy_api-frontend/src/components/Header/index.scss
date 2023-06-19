@@ -1,0 +1,67 @@
+@import "../../styles/variables";
+header {
+    width: 100%;
+    height: 2.5rem;
+    min-width: 500px;
+    background-color: $primary_color;
+    div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.3rem;
+        img {
+            margin-left: 1rem;
+            width: 40px;
+            height: auto;
+            cursor: pointer;
+            // margin-right: auto;
+        }
+        ul {
+            display: flex;
+            flex-flow: row nowrap;
+            align-items: center;
+            padding: 0;
+            margin: 0;
+            gap: 0.5rem;
+            padding-right: 1.5rem;
+            list-style: none;
+            li {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                a {
+                    font-size: 0.68rem;
+                    color: white;
+                    padding: 0.2em 0.4em;
+                    cursor: pointer;
+                    transition: color 0.4s ease-in-out;
+                    text-decoration: none;
+                    &:hover,
+                    &:active,
+                    &:focus {
+                        color: darken(white, 8%);
+                    }
+                }
+            }
+            .nav-active {
+                background-color: white;
+                padding: 0.1em 0.25em;
+                border-radius: 4px;
+                transition: background-color 0.4s ease-in;
+                a {
+                    color: $primary_color;
+                    &:hover,
+                    &:active,
+                    &:focus {
+                        color: darken($primary_color, 8%);
+                    }
+                }
+                &:hover {
+                    background-color: darken(white, 5%);
+                }
+            }
+        }
+    }
+}

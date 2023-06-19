@@ -1,0 +1,42 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+div.modelPage-wrapper {
+    flex-basis: 70%;
+    padding: 1.5rem 0.8rem;
+    position: relative;
+    overflow: hidden;
+    section.modelPage_header {
+        @include detailHeader;
+    }
+    section.modelPage_body {
+        margin: 1.5rem 0;
+        width: 100%;
+        color: $primary_color;
+        height: 60%;
+        overflow-y: auto;
+        @include scrollbar;
+        table,
+        td,
+        th {
+            border-collapse: collapse;
+            font-size: 0.6rem;
+            padding: 0.6rem;
+            background-color: $primary_color;
+        }
+        th {
+            color: white;
+            text-align: left;
+        }
+        table {
+            width: 100%;
+        }
+        td {
+            background-color: $secondary_color;
+            border-bottom: 1px solid $primary_color;
+            white-space: wrap;
+        }
+    }
+    section.modelPage_btns {
+        @include detailFooter
+    }
+}

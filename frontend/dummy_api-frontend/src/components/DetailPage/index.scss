@@ -1,0 +1,48 @@
+@import "../../styles/variables";
+@import "../../styles/mixins";
+div.detail-wrapper {
+    flex-basis: 70%;
+    padding: 1.5rem 0.8rem;
+    position: relative;
+    overflow: hidden;
+    section.detail_header {
+        @include detailHeader;
+    }
+    section.detail-list_models {
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        padding: 1rem 0;
+        padding-bottom: 0.3rem;
+        height: 72%;
+        overflow-y: auto;
+        @include scrollbar;
+        article {
+            border-bottom: 1px solid $primary_color_light;
+            border-radius: 5px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.4s ease-in;
+            &:hover {
+                background-color: lighten($primary_color, 50%);
+            }
+            a {
+                padding: 0.3rem 0.8rem;
+                display: block;
+                width: 100%;
+                height: 100%;
+                color: $primary_color;
+                text-decoration: none;
+                &:focus,
+                &:hover,
+                &:active {
+                    color: $primary_color;
+                }
+            }
+        }
+        color: $primary_color_light;
+    }
+    section.detail_footer {
+        @include detailFooter
+    }
+}
