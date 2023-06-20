@@ -22,6 +22,12 @@ div.sidebar_wrapper {
             height: auto;
         }
     }
+    .loading-sidebar-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 60%;
+    }
     section.my_api_list {
         display: flex;
         align-items: center;
@@ -60,8 +66,8 @@ div.sidebar_wrapper {
                 background-color: lighten($primary_color, 50%);
             }
         }
-        article.active {
-            background-color: $primary_color;
+        .sidebar_active {
+            background-color: $primary_color !important;
             color: white;
             box-shadow: 0 0 2px 0.2px darken($primary_color, 30%);
             &:hover {
@@ -75,6 +81,14 @@ div.sidebar_wrapper {
         bottom: 1rem;
         display: flex;
         justify-content: center;
+        .sidebar_active {
+            background-color: $primary_color !important;
+            color: white !important;
+            box-shadow: 0 0 2px 0.2px darken($primary_color, 30%);
+            &:hover {
+                background-color: lighten($primary_color, 10%);
+            }
+        }
         div {
             cursor: pointer;
             padding: 0.6rem 1.5rem;

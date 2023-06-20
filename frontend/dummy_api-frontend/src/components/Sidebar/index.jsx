@@ -1,29 +1,49 @@
 import "./index.scss"
 import caretLogo from "../../assets/caret-blue.svg"
 import newIcon from "../../assets/create-new-icon.svg"
+import newIconWhite from "../../assets/create-new-icon-white.svg"
 import { useNavigate } from "react-router-dom"
-const index = () => {
+import { useContext } from "react"
+import { AppContext } from "../../context"
+import { Bars } from "react-loader-spinner"
+
+const Index = ({ activeID, createApiPage }) => {
     const navigate = useNavigate();
+    const { apis, apiLoading } = useContext(AppContext)
+
 
     return (
         <div className="sidebar_wrapper">
             <section className='my_api_header'>
                 <h2>MY APIs</h2> <img src={caretLogo} />
             </section>
-            <section className='my_api_list'>
-                <article className="active" onClick={() => navigate("/my_apis/1")}>
-                    API 1
-                </article>
-                <article onClick={() => navigate("/my_apis/1")}>
-                    API 2
-                </article>
-                <article onClick={() => navigate("/my_apis/1")}>
-                    API 3
-                </article>
-            </section>
-            <section className='my_api_create_btn'>
-                <div onClick={() => navigate("/my_apis/create")}>
-                    <img src={newIcon} alt="" />
+            {
+                apiLoading ? <section className="loading-sidebar-wrapper">
+
+                    <Bars
+                        height="40"
+                        width="40"
+                        color="#44859F"
+                        ariaLabel="bars-loading"
+                        wrapperStyle={{}}
+                        wrapperClass="loading_element"
+                        visible={true}
+                    />
+                </section> : <section className='my_api_list'>
+                    {
+                        apis?.map((api) => {
+                            return <article key={api.id} className={`${api.id === +activeID ? 'sidebar_active' : undefined}`} onClick={() => navigate(`/my_apis/${api.id}`)}>
+                                {api.name}
+                            </article>
+                        })
+                    }
+                </section>
+            }
+
+
+            <section className={"my_api_create_btn"}>
+                <div className={`${createApiPage ? 'sidebar_active' : undefined}`} onClick={() => navigate("/my_apis/create")}>
+                    <img src={createApiPage ? newIconWhite : newIcon} alt="" />
                     CREATE
                 </div>
             </section>
@@ -31,4 +51,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Index

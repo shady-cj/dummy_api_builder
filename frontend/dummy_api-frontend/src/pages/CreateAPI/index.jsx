@@ -1,12 +1,12 @@
-import "./index.scss";
+import "./Index.scss";
 import FormCreatePage from "../../components/FormCreatePage";
 
-const index = () => {
+const Index = () => {
     return (
 
-        <FormCreatePage />
+        <FormCreatePage title="CREATE NEW API" nameValue="" descValue="" buttonTitle="CREATE" endpoint="create_new_api" method="POST" />
 
     )
 }
 
-export default index
+export default Index
