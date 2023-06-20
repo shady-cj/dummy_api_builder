@@ -17,17 +17,17 @@ def my_api_list(user):
     user_apis = user.user_apis
     apis = []
     for api in user_apis:
-        tables = []
-        for table in api.tables:
-            tables.append({"id": table.id, 
-                           "name": table.name,
-                            "description": table.description,
-                            })
+        # tables = []
+        # for table in api.tables:
+        #     tables.append({"id": table.id, 
+        #                    "name": table.name,
+        #                     "description": table.description,
+        #                     })
         apis.append({
             "id": api.id, 
             "name": api.name,
             "description": api.description,
-            "tables": tables
+            # "tables": tables
             })
     return jsonify(apis)
 
@@ -69,7 +69,7 @@ def create_new_api(user):
     new_api = Api(name=name, description=description, user_id=user.id)
     db.session.add(new_api)
     db.session.commit()
-    return jsonify({"name": new_api.name, "desc": new_api.description})
+    return jsonify({"id": new_api.id, "name": new_api.name, "desc": new_api.description})
 
 
 
@@ -89,7 +89,7 @@ def update_api_info(user, id):
     if description:
         api.description = description
     db.session.commit()
-    return jsonify({"name": api.name, "desc": api.description})
+    return jsonify({"id": api.id, "name": api.name, "desc": api.description})
 
 
 @app_views.route('/delete_api/<id>', methods=['DELETE'])
