@@ -61,7 +61,7 @@ def create_model(user, api_id):
                 return jsonify({"error": "invalid name(must be a valid python identifier) and not a python keyword"}), 400
             try:
                 if param_dt_length:
-                    param_dt_length = int(param_dt_length)
+                    param_dt_length = int(param_dt_length) or None
             except ValueError:
                 return jsonify({"error": "invalid data type length"})
             p = TableParameter(name=param_name, data_type=param_dt, dataType_length=param_dt_length, table_id=new_table.id)
@@ -189,7 +189,6 @@ def update_model(user, api_id, model_name):
 @login_required
 def show_model(user, api_id, model_name):
     api = Api.query.filter_by(id=api_id, user_id=user.id).first()
-    print(TableParameter.query.filter_by(id=1).first())
     if not api:
         return jsonify({"error": "no api of such is associated to the user"})
     get_table = Table.query.filter_by(name=model_name, api_id=api_id).first()

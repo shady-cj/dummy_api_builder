@@ -3,3 +3,4 @@ PyJWT==1.7.1
 Flask-SQLAlchemy==3.0.3
 python-dotenv
 python-dateutil
+flask-cors
