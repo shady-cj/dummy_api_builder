@@ -189,7 +189,6 @@ def update_model(user, api_id, model_name):
 @login_required
 def show_model(user, api_id, model_name):
     api = Api.query.filter_by(id=api_id, user_id=user.id).first()
-    print(TableParameter.query.filter_by(id=1).first())
     if not api:
         return jsonify({"error": "no api of such is associated to the user"})
     get_table = Table.query.filter_by(name=model_name, api_id=api_id).first()
