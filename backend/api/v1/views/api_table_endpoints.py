@@ -27,6 +27,7 @@ def create_model(user, api_id):
     name = data.get('name')
     description = data.get('description')
     table_parameters = data.get('tbl_params') or []
+    print(data)
 
     if type(table_parameters) != list and not len(table_parameters):
         return jsonify({"error": "table parameters are required"}), 400
@@ -200,10 +201,10 @@ def show_model(user, api_id, model_name):
         for const in params.constraints:
             tbl_constraints.append(const.name.value)
         tbl_params.append({
-            "id": params.id,
+            "index": params.id,
             "name": params.name,
-            "data_type": params.data_type.value,
-            "datatype_length": params.dataType_length,
+            "datatype": params.data_type.value,
+            "dt_length": params.dataType_length,
             "constraints": tbl_constraints
         })
     
