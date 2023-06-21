@@ -12,7 +12,7 @@ const index = () => {
     const handleChange = (e) => {
         if (status.type.length)
             setStatus({ type: "", message: "" });
-        setCredentials(prevCred => ({ ...prevCred, [e.target.name]: e.target.value.trims() }));
+        setCredentials(prevCred => ({ ...prevCred, [e.target.name]: e.target.value.trim() }));
     }
     const handleSubmit = async (e) => {
         e.preventDefault()

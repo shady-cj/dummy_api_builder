@@ -2,17 +2,16 @@ import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import "./index.scss"
 import desktop_logo from "../../assets/logo_desktop.svg"
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Cookies from 'js-cookie'
 
 
-function index() {
-
+function Index() {
+    const location = useLocation()
     const navigate = useNavigate()
     const [credentials, setCredentials] = useState({ email: "", password: "" })
     const [status, setStatus] = useState({ type: "", message: "" })
-
 
     const handleChange = (e) => {
         if (status.type.length)
@@ -42,8 +41,11 @@ function index() {
             setStatus({ type: "success", message: "Login Succesful" })
             Cookies.set('token', data.token, { path: '/', expires: (1 / 24) })
             setTimeout(() => {
-                navigate('/my_apis')
-            }, 3000)
+                if (location.state?.path)
+                    navigate(location.state.path)
+                else
+                    navigate('/my_apis')
+            }, 2000)
         }
     }
     const navs = [
@@ -99,4 +101,4 @@ function index() {
     )
 }
 
-export default index
+export default Index

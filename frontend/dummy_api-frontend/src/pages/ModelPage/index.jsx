@@ -1,11 +1,42 @@
 import "./index.scss"
+import { useContext, useEffect } from "react"
+import { AppContext } from "../../context"
+import { useParams, useNavigate } from "react-router-dom"
+import { Bars } from "react-loader-spinner"
+import Cookies from "js-cookie"
 
-const index = () => {
+const Index = () => {
+    const navigate = useNavigate()
+    const { fetchModel, model, loading } = useContext(AppContext)
+    const token = Cookies.get('token', { path: '/' })
+    const params = useParams()
+    const apiId = params.apiId
+    const modelName = params.modelName
+
+
+    useEffect(() => {
+        fetchModel(apiId, modelName)
+    }, [apiId, modelName])
+
+    if (loading) {
+        return <div className="loading-wrapper">
+
+            <Bars
+                height="80"
+                width="80"
+                color="#44859F"
+                ariaLabel="bars-loading"
+                wrapperStyle={{}}
+                wrapperClass="loading_element"
+                visible={true}
+            />
+        </div>
+    }
     return (
         <div className="modelPage-wrapper">
             <section className="modelPage_header">
-                <h2>Model 1</h2>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Libero magni rem numquam dolor minima soluta, cupiditate, excepturi molestias reiciendis corporis laborum quibusdam alias hic accusantium obcaecati non consequatur sapiente vero!</p>
+                <h2>{model?.name}</h2>
+                <p>{model?.desc}</p>
             </section>
 
             <section className="modelPage_body">
@@ -27,63 +58,37 @@ const index = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>_id</td>
-                            <td>Integer</td>
-                            <td>Null</td>
-                            <td>
-                                primary_key
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>email</td>
-                            <td>Integer</td>
-                            <td>30</td>
-                            <td>
-                                unique, nullable,
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>First Name</td>
-                            <td>String</td>
-                            <td>
-                                60
-                            </td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <td>Last Name</td>
-                            <td>String</td>
-                            <td>
-                                60
-                            </td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <td>Last Name</td>
-                            <td>String</td>
-                            <td>
-                                60
-                            </td>
-                            <td>Null</td>
-                        </tr>
-                        <tr>
-                            <td>Last Name</td>
-                            <td>String</td>
-                            <td>
-                                60
-                            </td>
-                            <td>Null</td>
-                        </tr>
+                        {
+                            model?.table_params?.map(tbl_param => {
+                                return <tr key={tbl_param.id}>
+                                    <td>{tbl_param.name}</td>
+                                    <td>{tbl_param.data_type}</td>
+                                    <td>{tbl_param.datatype_length || "Null"}</td>
+                                    <td>{tbl_param.constraints.join(", ")}</td>
+                                </tr>
+                            })
+                        }
+
                     </tbody>
                 </table>
             </section>
             <section className="modelPage_btns">
-                <button>Add Field</button>
-                <button>Edit Field</button>
+                <button>Edit Model</button>
+                <button style={{ backgroundColor: "red" }} onClick={async () => {
+                    const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/delete_model/${params.modelName}`, {
+                        method: "DELETE",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "x-access-token": token
+                        },
+                    })
+                    if (res.status === 204) {
+                        navigate(`/my_apis/${params.apiId}`)
+                    }
+                }}>Delete Model</button>
             </section>
         </div>
     )
 }
 
-export default index
+export default Index

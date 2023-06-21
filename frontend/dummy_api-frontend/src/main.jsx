@@ -8,6 +8,10 @@ import CreateAPI from "./pages/CreateAPI"
 import MyApiDetail from "./pages/MyApiDetail"
 import ModelPage from "./pages/ModelPage"
 import CreateModel from "./pages/CreateModel"
+import RedirectPage from './components/RedirectPage.jsx'
+import AppProvider from './context.jsx';
+import HomePage from "./pages/HomePage"
+import EditApiPage from "./pages/EditApiPage"
 import './index.scss'
 import {
   createBrowserRouter,
@@ -17,21 +21,25 @@ import {
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <RedirectPage><App /></RedirectPage>,
   },
   {
     path: '/login',
-    element: <Login />,
+    element: <RedirectPage><Login /></RedirectPage>,
   },
   {
 
     path: '/register',
-    element: <Register />
+    element: <RedirectPage><Register /></RedirectPage>
   },
   {
     path: '/my_apis',
     element: <MyApi />,
     children: [
+      {
+        path: "",
+        element: <HomePage />
+      },
       {
         path: ":apiId",
         element: <MyApiDetail />
@@ -41,11 +49,15 @@ const router = createBrowserRouter([
         element: <CreateAPI />
       },
       {
+        path: ":apiId/edit",
+        element: <EditApiPage />
+      },
+      {
         path: ":apiId/model/create",
         element: <CreateModel />
       },
       {
-        path: ":apiId/model/:modelsId",
+        path: ":apiId/model/:modelName",
         element: <ModelPage />
       },
 
@@ -56,6 +68,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AppProvider>
+      <RouterProvider router={router} />
+    </AppProvider>
   </React.StrictMode>,
 )
