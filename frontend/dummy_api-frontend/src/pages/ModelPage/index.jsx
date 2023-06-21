@@ -59,11 +59,11 @@ const Index = () => {
                     </thead>
                     <tbody>
                         {
-                            model?.table_params?.map(tbl_param => {
-                                return <tr key={tbl_param.id}>
+                            model && model.table_params?.map(tbl_param => {
+                                return <tr key={tbl_param.index}>
                                     <td>{tbl_param.name}</td>
-                                    <td>{tbl_param.data_type}</td>
-                                    <td>{tbl_param.datatype_length || "Null"}</td>
+                                    <td>{tbl_param.datatype}</td>
+                                    <td>{tbl_param.dt_length || "Null"}</td>
                                     <td>{tbl_param.constraints.join(", ")}</td>
                                 </tr>
                             })
@@ -73,7 +73,7 @@ const Index = () => {
                 </table>
             </section>
             <section className="modelPage_btns">
-                <button>Edit Model</button>
+                <button onClick={() => navigate('edit')}>Edit Model</button>
                 <button style={{ backgroundColor: "red" }} onClick={async () => {
                     const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/delete_model/${params.modelName}`, {
                         method: "DELETE",

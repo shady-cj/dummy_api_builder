@@ -4,7 +4,6 @@ import Cookies from "js-cookie";
 export const AppContext = React.createContext();
 
 const AppProvider = ({ children }) => {
-    const token = Cookies.get('token', { path: '/' })
     const [user, setUser] = React.useState(null)
     const [apis, setApis] = React.useState(null)
     const [model, setModel] = React.useState(null)
@@ -16,6 +15,7 @@ const AppProvider = ({ children }) => {
 
 
     const fetchApiDetail = async (apiId) => {
+        const token = Cookies.get('token', { path: '/' })
         setLoading(true)
         const response = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${apiId}`, {
             headers: {
@@ -23,11 +23,15 @@ const AppProvider = ({ children }) => {
             }
         });
         const data = await response.json();
-        setApiDetail(data)
+        if (response.status === 200) {
+
+            setApiDetail(data)
+        }
         setLoading(false)
 
     }
     const fetchApis = async () => {
+        const token = Cookies.get('token', { path: '/' })
         setApiLoading(true)
         const response = await fetch("http://192.168.0.105:5900/api/v1/my_apis", {
             headers: {
@@ -35,10 +39,11 @@ const AppProvider = ({ children }) => {
             }
         });
         const data = await response.json();
-        setApis(data)
+        if (response.status === 200) setApis(data)
         setApiLoading(false)
     }
     const fetchUser = async () => {
+        const token = Cookies.get('token', { path: '/' })
         setUserLoading(true)
         const response = await fetch("http://192.168.0.105:5900/api/v1/me", {
             headers: {
@@ -46,10 +51,11 @@ const AppProvider = ({ children }) => {
             }
         });
         const data = await response.json();
-        setUser(data)
+        if (response.status === 200) setUser(data)
         setUserLoading(false)
     }
     const fetchModel = async (apiId, modelName) => {
+        const token = Cookies.get('token', { path: '/' })
         setLoading(true)
         const response = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${apiId}/show_model/${modelName}`, {
             headers: {
@@ -57,7 +63,7 @@ const AppProvider = ({ children }) => {
             }
         });
         const data = await response.json();
-        setModel(data)
+        if (response.status === 200) setModel(data)
         setLoading(false)
     }
     return (<AppContext.Provider value={{

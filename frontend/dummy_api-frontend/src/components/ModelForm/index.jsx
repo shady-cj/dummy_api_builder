@@ -2,16 +2,12 @@ import "./index.scss"
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Cookies from "js-cookie"
-const Index = () => {
+const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
     const params = useParams();
     const navigate = useNavigate()
     const token = Cookies.get('token', { path: '/' })
-    const [fieldList, setFieldList] = useState([])
-    const [modelParam, setModelParam] = useState({
-        name: "",
-        description: "",
-        tbl_params: []
-    })
+    const [fieldList, setFieldList] = useState(fList || [])
+    const [modelParam, setModelParam] = useState(mParam)
 
     const handleChange = e => {
         const splitText = e.target.name.split("-")
@@ -29,12 +25,13 @@ const Index = () => {
             const getTbl_param = modelParam.tbl_params.find((entry) => {
                 if (entry.index == index) return entry
             })
-
+            console.log(getTbl_param, "getTbl_param")
             if (targetName === "constraints") {
                 targetValues = []
                 for (const v of e.target.selectedOptions) targetValues.push(v.value)
             } else {
                 targetValues = e.target.value;
+                console.log(e.target.value)
             }
             let mapValues;
             if (getTbl_param) {
@@ -44,6 +41,7 @@ const Index = () => {
                     }
                     return entry
                 })
+                console.log(mapValues, "mapValues")
             } else {
                 mapValues = [...modelParam.tbl_params, { index: index, [targetName]: targetValues, datatype: "string" }]
             }
@@ -56,8 +54,8 @@ const Index = () => {
     const handleSubmit = async e => {
         e.preventDefault()
         if (!modelParam.name) return;
-        const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/create_model`, {
-            method: "POST",
+        const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/${endpoint}`, {
+            method: method,
             headers: {
                 "Content-Type": "application/json",
                 "x-access-token": token
@@ -65,44 +63,49 @@ const Index = () => {
             body: JSON.stringify(modelParam)
         })
         const data = await res.json()
-        navigate(`/my_apis/${params.apiId}/model/${data.name}`)
+        if (res.status == 200) {
+            navigate(`/my_apis/${params.apiId}/model/${data.name}`)
+        } else navigate(`/my_apis/${params.apiId}`)
+
     }
     return (
         <div className="model-create__wrapper">
-            <h2>Create New Model</h2>
+            <h2>{title}</h2>
             <section className="model-create__form">
                 <form action="" onSubmit={handleSubmit}>
                     <section className="model-form_main">
                         <div>
-                            <label htmlFor="name">Model Name</label>
-                            <input type="text" name="name" id="name" onChange={handleChange} />
+                            <label htmlFor="name" >Model Name</label>
+                            <input type="text" name="name" value={modelParam.name} id="name" onChange={handleChange} />
                             <small>Name must be a valid identifier &nbsp;
                                 <a href="https://www.askpython.com/python/python-identifiers-rules-best-practices" target="_blank" rel="noreferrer">more</a>
                             </small>
                         </div>
                         <div>
                             <label htmlFor="desc">Description</label>
-                            <textarea name="description" id="desc" onChange={handleChange}></textarea>
+                            <textarea name="description" id="desc" value={modelParam.description} onChange={handleChange}></textarea>
                         </div>
                     </section>
                     <section className="model-form_fields">
                         <div className="model-form_fields_wrapper">
                             {fieldList.map((field, index) => {
+                                const currentTbl_params = modelParam.tbl_params.find((tblP) => tblP.index === field)
+                                // console.log(currentTbl_params)
                                 return (
                                     <section key={field}>
                                         <h5>Field {index}</h5>
                                         <div>
                                             <label htmlFor={`field-name-${field}`}>Field Name</label>
-                                            <input type="text" name={`name-${field}`} id={`field-name-${field}`} onChange={handleChange} required />
+                                            <input type="text" name={`name-${field}`} value={currentTbl_params?.name} id={`field-name-${field}`} onChange={handleChange} required />
                                         </div>
                                         <div>
                                             <label htmlFor={`field-length-${field}`}>Max Length</label>
-                                            <input type="number" id={`field-length-${field}`} name={`length-${field}`} onChange={handleChange} />
+                                            <input type="number" id={`field-length-${field}`} name={`dt_length-${field}`} value={currentTbl_params?.dt_length} onChange={handleChange} />
 
                                         </div>
                                         <div>
                                             <label htmlFor={`field-datatype-${field}`}>Field Data Type</label>
-                                            <select name={`datatype-${field}`} id={`field-datatype-${field}`} defaultValue={"string"} onChange={handleChange}>
+                                            <select name={`datatype-${field}`} id={`field-datatype-${field}`} value={currentTbl_params?.datatype} onChange={handleChange}>
                                                 <option value="string">String</option>
                                                 <option value="text">Text</option>
                                                 <option value="integer">Integer</option>
@@ -114,10 +117,10 @@ const Index = () => {
                                         <div>
                                             <label htmlFor={`field-constraints-${field}`}>Field Constraints</label>
                                             <select name={`constraints-${field}`} id={`field-constraints-${field}`} onChange={handleChange} multiple>
-                                                <option value="primary_key">Primary Key</option>
-                                                <option value="foreign_key">Foreign Key</option>
-                                                <option value="unique">Unique</option>
-                                                <option value="nullable">Nullable</option>
+                                                <option value="primary_key" selected={currentTbl_params?.constraints?.includes("primary_key") ? true : false}>Primary Key</option>
+                                                <option value="foreign_key" selected={currentTbl_params?.constraints?.includes("foreign_key") ? true : false}>Foreign Key</option>
+                                                <option value="unique" selected={currentTbl_params?.constraints?.includes("unique") ? true : false}>Unique</option>
+                                                <option value="nullable" selected={currentTbl_params?.constraints?.includes("nullable") ? true : false}>Nullable</option>
                                             </select>
                                         </div>
                                         <button type="button" style={{ float: "right" }} onClick={() => {
@@ -140,7 +143,7 @@ const Index = () => {
 
                         }}>Add Field</button>
                     </section>
-                    <button className="model-submit_btn">CREATE</button>
+                    <button className="model-submit_btn">{btnTitle}</button>
                 </form>
             </section>
 

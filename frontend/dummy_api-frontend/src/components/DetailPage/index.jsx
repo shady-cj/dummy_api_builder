@@ -39,7 +39,7 @@ const Index = () => {
                 </p>
             </section>
             <section className="detail-list_models">
-                {apiDetail?.tables.map(table => {
+                {apiDetail && apiDetail.tables && apiDetail.tables.map(table => {
                     return <article key={table?.id}>
                         <Link to={`model/${table?.name}`}>
                             {table?.name}

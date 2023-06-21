@@ -12,6 +12,7 @@ import RedirectPage from './components/RedirectPage.jsx'
 import AppProvider from './context.jsx';
 import HomePage from "./pages/HomePage"
 import EditApiPage from "./pages/EditApiPage"
+import EditModel from "./pages/EditModel"
 import './index.scss'
 import {
   createBrowserRouter,
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
         path: ":apiId/model/:modelName",
         element: <ModelPage />
       },
+      {
+        path: ":apiId/model/:modelName/edit",
+        element: <EditModel />
+      }
 
     ]
   },
