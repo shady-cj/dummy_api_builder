@@ -18,11 +18,13 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import ErrorPage from './error-page.jsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RedirectPage><App /></RedirectPage>,
+    errorElement: <ErrorPage />
   },
   {
     path: '/login',

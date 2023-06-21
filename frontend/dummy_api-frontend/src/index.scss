@@ -7,3 +7,7 @@ section.my_api_body {
     display: flex;
     flex-direction: row;
 }
+
+.error-wrapper {
+    min-height: calc(100vh - 4.5rem);
+}

@@ -20,18 +20,16 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
         }
         else {
             const targetName = splitText[0]
-            const index = splitText[1]
+            const index = parseInt(splitText[1])
             let targetValues = null
             const getTbl_param = modelParam.tbl_params.find((entry) => {
                 if (entry.index == index) return entry
             })
-            console.log(getTbl_param, "getTbl_param")
             if (targetName === "constraints") {
                 targetValues = []
                 for (const v of e.target.selectedOptions) targetValues.push(v.value)
             } else {
                 targetValues = e.target.value;
-                console.log(e.target.value)
             }
             let mapValues;
             if (getTbl_param) {
@@ -41,7 +39,6 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
                     }
                     return entry
                 })
-                console.log(mapValues, "mapValues")
             } else {
                 mapValues = [...modelParam.tbl_params, { index: index, [targetName]: targetValues, datatype: "string" }]
             }
@@ -63,6 +60,7 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
             body: JSON.stringify(modelParam)
         })
         const data = await res.json()
+        // console.log(data)
         if (res.status == 200) {
             navigate(`/my_apis/${params.apiId}/model/${data.name}`)
         } else navigate(`/my_apis/${params.apiId}`)
@@ -90,22 +88,21 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
                         <div className="model-form_fields_wrapper">
                             {fieldList.map((field, index) => {
                                 const currentTbl_params = modelParam.tbl_params.find((tblP) => tblP.index === field)
-                                // console.log(currentTbl_params)
                                 return (
                                     <section key={field}>
                                         <h5>Field {index}</h5>
                                         <div>
                                             <label htmlFor={`field-name-${field}`}>Field Name</label>
-                                            <input type="text" name={`name-${field}`} value={currentTbl_params?.name} id={`field-name-${field}`} onChange={handleChange} required />
+                                            <input type="text" name={`name-${field}`} value={currentTbl_params?.name || ""} id={`field-name-${field}`} onChange={handleChange} required />
                                         </div>
                                         <div>
                                             <label htmlFor={`field-length-${field}`}>Max Length</label>
-                                            <input type="number" id={`field-length-${field}`} name={`dt_length-${field}`} value={currentTbl_params?.dt_length} onChange={handleChange} />
+                                            <input type="number" id={`field-length-${field}`} name={`dt_length-${field}`} value={currentTbl_params?.dt_length || ""} onChange={handleChange} />
 
                                         </div>
                                         <div>
                                             <label htmlFor={`field-datatype-${field}`}>Field Data Type</label>
-                                            <select name={`datatype-${field}`} id={`field-datatype-${field}`} value={currentTbl_params?.datatype} onChange={handleChange}>
+                                            <select name={`datatype-${field}`} id={`field-datatype-${field}`} value={currentTbl_params?.datatype || "string"} onChange={handleChange}>
                                                 <option value="string">String</option>
                                                 <option value="text">Text</option>
                                                 <option value="integer">Integer</option>

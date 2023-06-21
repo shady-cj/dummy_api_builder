@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react"
 import { AppContext } from "../../context"
 import { useParams } from "react-router-dom"
 import { Bars } from "react-loader-spinner"
+import ErrorElement from "../../components/ErrorElement"
 const Index = () => {
     const { fetchModel, model, loading } = useContext(AppContext)
     const params = useParams()
@@ -27,9 +28,9 @@ const Index = () => {
         <>
             {
                 loading ? <div className="loading-wrapper"><Bars height="80" width="80" color="#44859F" ariaLabel="bars-loading"
-                    wrapperStyle={{}} wrapperClass="loading_element" visible={true} /> </div> : model ?
-                    <ModelForm fList={model.table_params.map(p => p.index)} mParam={mParam} title={"EDIT MODEL"} btnTitle="EDIT" method="PUT" endpoint={`update_model/${modelName}`} />
-                    : ""
+                    wrapperStyle={{}} wrapperClass="loading_element" visible={true} /> </div> : !loading && !model ? <ErrorElement /> : model ?
+                        <ModelForm fList={model.table_params.map(p => p.index)} mParam={mParam} title={"EDIT MODEL"} btnTitle="EDIT" method="PUT" endpoint={`update_model/${modelName}`} />
+                        : ""
             }
         </>
     )

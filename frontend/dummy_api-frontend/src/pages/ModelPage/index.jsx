@@ -3,6 +3,7 @@ import { useContext, useEffect } from "react"
 import { AppContext } from "../../context"
 import { useParams, useNavigate } from "react-router-dom"
 import { Bars } from "react-loader-spinner"
+import ErrorElement from "../../components/ErrorElement"
 import Cookies from "js-cookie"
 
 const Index = () => {
@@ -34,59 +35,64 @@ const Index = () => {
     }
     return (
         <div className="modelPage-wrapper">
-            <section className="modelPage_header">
-                <h2>{model?.name}</h2>
-                <p>{model?.desc}</p>
-            </section>
+            {
+                !loading && !model ? <ErrorElement /> : <>
+                    <section className="modelPage_header">
+                        <h2>{model?.name}</h2>
+                        <p>{model?.desc}</p>
+                    </section>
 
-            <section className="modelPage_body">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>
-                                Fields
-                            </th>
-                            <th>
-                                Field Type
-                            </th>
-                            <th>
-                                Field Length
-                            </th>
-                            <th>
-                                Field Constraints
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            model && model.table_params?.map(tbl_param => {
-                                return <tr key={tbl_param.index}>
-                                    <td>{tbl_param.name}</td>
-                                    <td>{tbl_param.datatype}</td>
-                                    <td>{tbl_param.dt_length || "Null"}</td>
-                                    <td>{tbl_param.constraints.join(", ")}</td>
+                    <section className="modelPage_body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Fields
+                                    </th>
+                                    <th>
+                                        Field Type
+                                    </th>
+                                    <th>
+                                        Field Length
+                                    </th>
+                                    <th>
+                                        Field Constraints
+                                    </th>
                                 </tr>
-                            })
-                        }
+                            </thead>
+                            <tbody>
+                                {
+                                    model && model.table_params?.map(tbl_param => {
+                                        return <tr key={tbl_param.index}>
+                                            <td>{tbl_param.name}</td>
+                                            <td>{tbl_param.datatype}</td>
+                                            <td>{tbl_param.dt_length || "Null"}</td>
+                                            <td>{tbl_param.constraints.join(", ")}</td>
+                                        </tr>
+                                    })
+                                }
 
-                    </tbody>
-                </table>
-            </section>
-            <section className="modelPage_btns">
-                <button onClick={() => navigate('edit')}>Edit Model</button>
-                <button style={{ backgroundColor: "red" }} onClick={async () => {
-                    const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/delete_model/${params.modelName}`, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-access-token": token
-                        },
-                    })
-                    if (res.status === 204) {
-                        navigate(`/my_apis/${params.apiId}`)
-                    }
-                }}>Delete Model</button>
-            </section>
+                            </tbody>
+                        </table>
+                    </section>
+                    <section className="modelPage_btns">
+                        <button onClick={() => navigate('edit')}>Edit Model</button>
+                        <button style={{ backgroundColor: "red" }} onClick={async () => {
+                            const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/delete_model/${params.modelName}`, {
+                                method: "DELETE",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                    "x-access-token": token
+                                },
+                            })
+                            if (res.status === 204) {
+                                navigate(`/my_apis/${params.apiId}`)
+                            }
+                        }}>Delete Model</button>
+                    </section>
+                </>
+            }
+
         </div>
     )
 }

@@ -1,8 +1,9 @@
 import "./index.scss";
-import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useContext, useEffect } from "react";
 import { AppContext } from "../../context";
 import { Bars } from "react-loader-spinner";
+import ErrorElement from "../ErrorElement"
 import Cookies from "js-cookie";
 
 const Index = () => {
@@ -32,48 +33,54 @@ const Index = () => {
 
     return (
         <div className="detail-wrapper">
-            <section className="detail_header">
-                <h2>{apiDetail?.name}</h2>
-                <p>
-                    {apiDetail?.description}
-                </p>
-            </section>
-            <section className="detail-list_models">
-                {apiDetail && apiDetail.tables && apiDetail.tables.map(table => {
-                    return <article key={table?.id}>
-                        <Link to={`model/${table?.name}`}>
-                            {table?.name}
-                        </Link>
-                    </article>
-                })}
-            </section>
-            <section className="detail_footer">
-                <button onClick={() => navigate('model/create')}>
-                    Add Model
-                </button>
-                <button onClick={() => navigate('edit')}>
-                    Edit API
-                </button>
-                <button style={{ backgroundColor: 'red' }} onClick={async () => {
-                    const res = await fetch(`http://192.168.0.105:5900/api/v1/delete_api/${params.apiId}`, {
-                        method: "DELETE",
-                        headers: {
-                            "Content-Type": "application/json",
-                            "x-access-token": token
-                        },
-                    })
-                    if (res.status === 204) {
-                        setInvalidate(true)
-                        navigate('/my_apis')
-                    }
-                }}>
-                    Delete API
-                </button>
-                <button>
-                    Test Endpoint
-                </button>
+            {
+                !loading && !apiDetail ? <ErrorElement /> :
+                    <>
+                        <section className="detail_header">
+                            <h2>{apiDetail?.name}</h2>
+                            <p>
+                                {apiDetail?.description}
+                            </p>
+                        </section>
+                        <section className="detail-list_models">
+                            {apiDetail && apiDetail.tables && apiDetail.tables.map(table => {
+                                return <article key={table?.id}>
+                                    <Link to={`model/${table?.name}`}>
+                                        {table?.name}
+                                    </Link>
+                                </article>
+                            })}
+                        </section>
+                        <section className="detail_footer">
+                            <button onClick={() => navigate('model/create')}>
+                                Add Model
+                            </button>
+                            <button onClick={() => navigate('edit')}>
+                                Edit API
+                            </button>
+                            <button style={{ backgroundColor: 'red' }} onClick={async () => {
+                                const res = await fetch(`http://192.168.0.105:5900/api/v1/delete_api/${params.apiId}`, {
+                                    method: "DELETE",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "x-access-token": token
+                                    },
+                                })
+                                if (res.status === 204) {
+                                    setInvalidate(true)
+                                    navigate('/my_apis')
+                                }
+                            }}>
+                                Delete API
+                            </button>
+                            <button>
+                                Test Endpoint
+                            </button>
 
-            </section>
+                        </section>
+                    </>
+            }
+
         </div>
     )
 }
