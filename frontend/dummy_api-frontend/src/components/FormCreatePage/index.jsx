@@ -3,6 +3,7 @@ import { useState, useContext } from "react";
 import { AppContext } from "../../context";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { hostUrl } from "../../variables";
 
 const Index = ({ title, nameValue, descValue, buttonTitle, endpoint, method }) => {
     const { setInvalidate } = useContext(AppContext)
@@ -17,7 +18,7 @@ const Index = ({ title, nameValue, descValue, buttonTitle, endpoint, method }) =
     const handleSubmit = async e => {
         e.preventDefault()
         if (!apiData.name) return;
-        const res = await fetch(`http://192.168.0.105:5900/api/v1/${endpoint}`, {
+        const res = await fetch(`${hostUrl}/api/v1/${endpoint}`, {
             method: method,
             headers: {
                 "Content-Type": "application/json",

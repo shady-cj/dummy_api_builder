@@ -2,6 +2,7 @@ import "./index.scss"
 import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Cookies from "js-cookie"
+import { hostUrl } from "../../variables"
 const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
     const params = useParams();
     const navigate = useNavigate()
@@ -51,7 +52,7 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
     const handleSubmit = async e => {
         e.preventDefault()
         if (!modelParam.name) return;
-        const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/${endpoint}`, {
+        const res = await fetch(`${hostUrl}/api/v1/my_api/${params.apiId}/${endpoint}`, {
             method: method,
             headers: {
                 "Content-Type": "application/json",

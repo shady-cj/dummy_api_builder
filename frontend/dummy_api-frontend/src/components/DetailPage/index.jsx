@@ -5,6 +5,7 @@ import { AppContext } from "../../context";
 import { Bars } from "react-loader-spinner";
 import ErrorElement from "../ErrorElement"
 import Cookies from "js-cookie";
+import { hostUrl } from "../../variables";
 
 const Index = () => {
     const token = Cookies.get("token", { path: '/' })
@@ -59,7 +60,7 @@ const Index = () => {
                                 Edit API
                             </button>
                             <button style={{ backgroundColor: 'red' }} onClick={async () => {
-                                const res = await fetch(`http://192.168.0.105:5900/api/v1/delete_api/${params.apiId}`, {
+                                const res = await fetch(`${hostUrl}/api/v1/delete_api/${params.apiId}`, {
                                     method: "DELETE",
                                     headers: {
                                         "Content-Type": "application/json",
@@ -73,7 +74,7 @@ const Index = () => {
                             }}>
                                 Delete API
                             </button>
-                            <button>
+                            <button onClick={() => navigate("/my_apis/test_endpoint")}>
                                 Test Endpoint
                             </button>
 

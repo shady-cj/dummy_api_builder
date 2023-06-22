@@ -1,5 +1,6 @@
 import React from "react"
 import Cookies from "js-cookie";
+import { hostUrl } from "./variables";
 
 export const AppContext = React.createContext();
 
@@ -17,7 +18,7 @@ const AppProvider = ({ children }) => {
     const fetchApiDetail = async (apiId) => {
         const token = Cookies.get('token', { path: '/' })
         setLoading(true)
-        const response = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${apiId}`, {
+        const response = await fetch(`${hostUrl}/api/v1/my_api/${apiId}`, {
             headers: {
                 'x-access-token': token
             }
@@ -33,7 +34,7 @@ const AppProvider = ({ children }) => {
     const fetchApis = async () => {
         const token = Cookies.get('token', { path: '/' })
         setApiLoading(true)
-        const response = await fetch("http://192.168.0.105:5900/api/v1/my_apis", {
+        const response = await fetch(`${hostUrl}/api/v1/my_apis`, {
             headers: {
                 'x-access-token': token
             }
@@ -45,7 +46,7 @@ const AppProvider = ({ children }) => {
     const fetchUser = async () => {
         const token = Cookies.get('token', { path: '/' })
         setUserLoading(true)
-        const response = await fetch("http://192.168.0.105:5900/api/v1/me", {
+        const response = await fetch(`${hostUrl}/api/v1/me`, {
             headers: {
                 'x-access-token': token
             }
@@ -57,7 +58,7 @@ const AppProvider = ({ children }) => {
     const fetchModel = async (apiId, modelName) => {
         const token = Cookies.get('token', { path: '/' })
         setLoading(true)
-        const response = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${apiId}/show_model/${modelName}`, {
+        const response = await fetch(`${hostUrl}/api/v1/my_api/${apiId}/show_model/${modelName}`, {
             headers: {
                 'x-access-token': token
             }

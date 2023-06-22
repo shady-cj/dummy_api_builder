@@ -5,6 +5,7 @@ import { useParams, useNavigate } from "react-router-dom"
 import { Bars } from "react-loader-spinner"
 import ErrorElement from "../../components/ErrorElement"
 import Cookies from "js-cookie"
+import { hostUrl } from "../../variables"
 
 const Index = () => {
     const navigate = useNavigate()
@@ -82,7 +83,7 @@ const Index = () => {
                     <section className="modelPage_btns">
                         <button onClick={() => navigate('edit')}>Edit Model</button>
                         <button style={{ backgroundColor: "red" }} onClick={async () => {
-                            const res = await fetch(`http://192.168.0.105:5900/api/v1/my_api/${params.apiId}/delete_model/${params.modelName}`, {
+                            const res = await fetch(`${hostUrl}/api/v1/my_api/${params.apiId}/delete_model/${params.modelName}`, {
                                 method: "DELETE",
                                 headers: {
                                     "Content-Type": "application/json",

@@ -4,6 +4,7 @@ import "./index.scss"
 import desktop_logo from "../../assets/logo_desktop.svg"
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { hostUrl } from '../../variables';
 
 const index = () => {
     const navigate = useNavigate();
@@ -24,7 +25,7 @@ const index = () => {
             return;
         }
 
-        const req = await fetch('http://192.168.0.105:5900/api/v1/signup', {
+        const req = await fetch(`${hostUrl}/api/v1/signup`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

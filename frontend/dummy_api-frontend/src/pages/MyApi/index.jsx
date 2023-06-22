@@ -5,8 +5,6 @@ import { Outlet, Navigate, useLocation, useParams } from "react-router-dom"
 import Cookies from "js-cookie"
 import { useEffect, useContext } from "react"
 import { AppContext } from "../../context"
-import { Bars } from 'react-loader-spinner'
-
 
 const Index = () => {
     const { fetchApis, user, fetchUser, apis, invalidate, setInvalidate } = useContext(AppContext)

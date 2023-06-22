@@ -5,6 +5,7 @@ import desktop_logo from "../../assets/logo_desktop.svg"
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Cookies from 'js-cookie'
+import { hostUrl } from '../../variables';
 
 
 function Index() {
@@ -23,7 +24,7 @@ function Index() {
         setStatus({ type: "", message: "" });
         if (!credentials.password && !credentials.email)
             return;
-        const req = await fetch('http://192.168.0.105:5900/api/v1/login', {
+        const req = await fetch(`${hostUrl}/api/v1/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

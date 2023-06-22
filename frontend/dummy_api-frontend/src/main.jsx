@@ -13,6 +13,7 @@ import AppProvider from './context.jsx';
 import HomePage from "./pages/HomePage"
 import EditApiPage from "./pages/EditApiPage"
 import EditModel from "./pages/EditModel"
+import TestEndpoint from "./pages/TestEndpoint"
 import './index.scss'
 import {
   createBrowserRouter,
@@ -42,6 +43,10 @@ const router = createBrowserRouter([
       {
         path: "",
         element: <HomePage />
+      },
+      {
+        path: "test_endpoint",
+        element: <TestEndpoint />
       },
       {
         path: ":apiId",
