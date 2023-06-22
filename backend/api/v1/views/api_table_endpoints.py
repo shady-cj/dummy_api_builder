@@ -206,6 +206,7 @@ def show_model(user, api_id, model_name):
             "name": params.name,
             "datatype": params.data_type.name,
             "dt_length": params.dataType_length,
+            "foreign_key_rf": params.foreign_key_reference_field,
             "constraints": tbl_constraints
         })
     

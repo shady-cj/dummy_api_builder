@@ -126,22 +126,26 @@ def add_list_entry(api_token, api_name, model_name):
                 filter_in = False
                 for entry in get_entries:
                     tp_name = entry.tableparameter.name
+                    if entry.tableparameter.data_type.name == "integer":
+                        e_value = int(entry.value)
+                    else:
+                        e_value = entry.value
                     if tp_name in args:
                         found_valid_arg = True
                         if args[tp_name] == entry.value:
                             filter_in = True
-                    entry_data[tp_name] = entry.value
+                    entry_data[tp_name] = e_value
                 if filter_in:
                     data.append(entry_data)
             if not found_valid_arg: # if none was valid then just return all
                 data = []
                 for entry_list in table.entry_lists:
                     if entry_list.entries:
-                        data.append({entry.tableparameter.name: entry.value for entry in entry_list.entries})
+                        data.append({entry.tableparameter.name: int(entry.value) if entry.tableparameter.data_type.name == "integer" else entry.value for entry in entry_list.entries})
         else:
             for entry_list in table.entry_lists:
                 if entry_list.entries:
-                    data.append({entry.tableparameter.name: entry.value for entry in entry_list.entries})
+                    data.append({entry.tableparameter.name: int(entry.value) if entry.tableparameter.data_type.name == "integer" else entry.value for entry in entry_list.entries})
         return jsonify(data), 200
 
 
@@ -230,7 +234,7 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
         data = {}
         for data_entry in e_list.entries:
             fieldName = data_entry.tableparameter.name
-            data[fieldName] = data_entry.value
+            data[fieldName] = int(data_entry.value) if data_entry.tableparameter.data_type.name == "integer" else data_entry.value
         tableKeyName = f"{api_name}.{model_name}"
         # rel_key = db.session(Relationship).filter(Relationship.fk_rel.like(f"{tableKeyName}%"), Relationship.entry_ref_pk=e_list.primary_key_value).first()
         rels = Relationship.query.filter(Relationship.fk_rel.startswith(f"{tableKeyName}"), Relationship.entry_ref_pk==e_list.primary_key_value)
@@ -241,7 +245,7 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
             for e_list_rel in rel.entrylists:
                 rel_data = {}
                 for ent in e_list_rel.entries:
-                    rel_data[ent.tableparameter.name] = ent.value
+                    rel_data[ent.tableparameter.name] = int(ent.value) if ent.tableparameter.data_type.name == "integer" else ent.value
                 rel_key_data[rel.fk_model_name].append(rel_data)
             rel_list.append(rel_key_data)
         data["relationships"] = rel_list
