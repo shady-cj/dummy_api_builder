@@ -7,6 +7,7 @@ from api.v1.views import app_views
 from flask import request, jsonify
 from api.v1.auth.auth import login_required
 from models.api import Api
+from models.table import Table
 from models import db
 from .views_utils import validate_name
 
@@ -98,6 +99,7 @@ def delete_api(user, id):
     api = Api.query.filter_by(id=id, user_id=user.id)
     if not api.first():
         return jsonify({"error": "api doesn't exist"}), 400
+    Table.query.filter_by(api_id=api.first().id).delete()
     api.delete()
     db.session.commit()
     return jsonify(''), 204

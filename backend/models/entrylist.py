@@ -15,3 +15,4 @@ class EntryList(db.Model):
     entries = db.relationship('Entry', back_populates='entry_list', cascade="all, delete")
     table_id = db.Column(db.Integer, db.ForeignKey('table.id')) 
     table = db.relationship('Table', back_populates='entry_lists')
+    

@@ -13,4 +13,3 @@ class Entry(db.Model):
     tableparameter = db.relationship('TableParameter', back_populates='entries')
     entry_list_id = db.Column(db.Integer, db.ForeignKey('entrylist.id'))
     entry_list = db.relationship('EntryList', back_populates='entries')
-    

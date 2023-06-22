@@ -23,11 +23,9 @@ as it would have been added with api_list
 @login_required
 def create_model(user, api_id):
     data = request.get_json()
-
     name = data.get('name')
     description = data.get('description')
     table_parameters = data.get('tbl_params') or []
-    print(data)
 
     if type(table_parameters) != list and not len(table_parameters):
         return jsonify({"error": "table parameters are required"}), 400
@@ -40,7 +38,6 @@ def create_model(user, api_id):
         return jsonify({"error": "no api of such is associated to the user"})
     
     get_table = Table.query.filter_by(api_id=api_id, name=name).first()
-
     if get_table:
         return jsonify({"error": "Table already exists"}), 400
     if not validate_name(name):
@@ -66,23 +63,25 @@ def create_model(user, api_id):
             except ValueError:
                 return jsonify({"error": "invalid data type length"})
             p = TableParameter(name=param_name, data_type=param_dt, dataType_length=param_dt_length, table_id=new_table.id)
+            if "primary_key" in constraints and "nullable" in constraints:
+                constraints.remove("nullable")
             for const in constraints:
                 if not validate_constraint(const):
                     return jsonify({"error": "invalid constraint"}), 400
                 if const == "foreign_key":
-                    fk_rf = param.get("foreign_key_rf") #expected format(api.table.field)
+                    fk_rf = param.get("foreign_key_rf") #expected format(api.table)
                     if not fk_rf:
                         return jsonify({"error": "Expected a foreign key reference field."}), 400
-                    f_api, f_table, field = fk_rf.split(".")
+                    f_api, f_table = fk_rf.split(".")
                     r_api = Api.query.filter_by(name=f_api, user_id=user.id).first()
                     if not r_api:
                         return jsonify({"error": "Api name referenced in the foreign key doesn't exist"}), 400
                     r_table = Table.query.filter_by(name=f_table, api_id=r_api.id).first()
                     if not r_table:
                         return jsonify({"error", "Table name referenced doesn't exist"}), 400
-                    r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
-                    if not r_field:
-                        return jsonify({"error": "Field name referenced doesn't exist"}), 400
+                    # r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
+                    # if not r_field:
+                    #     return jsonify({"error": "Field name referenced doesn't exist"}), 400
                     p.foreign_key_reference_field = fk_rf
                 if const == "primary_key":
                     p.primary_key = True
@@ -150,23 +149,25 @@ def update_model(user, api_id, model_name):
                     p.dataType_length = param_dt_length
                 except ValueError:
                     pass
+            if "primary_key" in constraints and "nullable" in constraints:
+                constraints.remove("nullable")
             for const in constraints:
                 if not validate_constraint(const):
                     continue
                 if const == "foreign_key":
-                    fk_rf = param.get("foreign_key_rf") #expected format(api.table.field) 
+                    fk_rf = param.get("foreign_key_rf") #expected format(api.table) 
                     if not fk_rf:
                         continue
-                    f_api, f_table, field = fk_rf.split(".")
+                    f_api, f_table = fk_rf.split(".")
                     r_api = Api.query.filter_by(name=f_api, user_id=user.id).first()
                     if not r_api:
                         continue
                     r_table = Table.query.filter_by(name=f_table, api_id=r_api.id).first()
                     if not r_table:
                         continue
-                    r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
-                    if not r_field:
-                        continue
+                    # r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
+                    # if not r_field:
+                    #     continue
                     p.foreign_key_reference_field = fk_rf
                 if const == "primary_key":
                     p.primary_key = True
@@ -203,7 +204,7 @@ def show_model(user, api_id, model_name):
         tbl_params.append({
             "index": params.id,
             "name": params.name,
-            "datatype": params.data_type.value,
+            "datatype": params.data_type.name,
             "dt_length": params.dataType_length,
             "constraints": tbl_constraints
         })
@@ -223,6 +224,12 @@ def delete_model(user, api_id, model_name):
     api = Api.query.filter_by(id=api_id, user_id=user.id).first()
     if not api:
         return jsonify({"error": "no api of such is associated to the user"})
+    t = Table.query.filter_by(name=model_name, api_id=api_id).first().id
+    tbl_p = TableParameter.query.filter_by(table_id=t).first()
+    if tbl_p:
+        tbl_p.constraints.clear()
+    TableParameter.query.filter_by(table_id=t).delete()
     Table.query.filter_by(name=model_name, api_id=api_id).delete()
     db.session.commit()
+    
     return jsonify(''), 204

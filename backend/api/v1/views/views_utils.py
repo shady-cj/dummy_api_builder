@@ -92,17 +92,22 @@ def validate_entry_constraints(value, tbl_p):
             from models.table import Table
             from models.api import Api
             from models.tableparameter import TableParameter
+            from models.entrylist import EntryList
+            from models.relationship import Relationship
             get_ref_field = tbl_p.foreign_key_reference_field
-            api, table, field = get_ref_field.split(".")
+            api, table = get_ref_field.split(".")
             r_api = Api.query.filter_by(name=api).first()
             if not r_api:
                 return False, "fk", "Api referenced by foreign key doesn't exist anymore"
             r_table = Table.query.filter_by(name=table, api_id=r_api.id).first()
             if not r_table:
                 return False, "fk", "Table referenced by foreign key doesn't exist anymore"
-            r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
-            if not r_field:
-                return False, "fk", "Field referenced by foreign key doesn't exist anymore"
+            # r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
+            # if not r_field:
+            #     return False, "fk", "Field referenced by foreign key doesn't exist anymore"
+            e_li = EntryList.query.filter_by(table_id=r_table.id, primary_key_value = value).first()
+            if not e_li:
+                return False, "fk", "Primary key referenced for the foreign key doesn't exist"
             fk = "fk"
         if const.name == "unique":
             from models.entry import Entry

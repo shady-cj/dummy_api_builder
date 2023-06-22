@@ -13,7 +13,7 @@ entrylist_relationships = db.Table('entrylist_relationships',
 
 class Relationship(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    entry_id = db.Column(db.Integer, db.ForeignKey("entry.id"))
+    entry_ref_pk = db.Column(db.String, nullable=False) # reference to fk pk
     entrylists = db.relationship("EntryList", secondary=entrylist_relationships, backref="relationships")
-    fk_rel = db.Column(db.String, nullable=False) # foreign key relationship in form (parentapi.table.field->childapi.table.field)
+    fk_rel = db.Column(db.String, nullable=False) # foreign key relationship in form (parentapi.table->childapi.table.field)
     fk_model_name = db.Column(db.String, nullable=False) # e.g users, posts, etc
