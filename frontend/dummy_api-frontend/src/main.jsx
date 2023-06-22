@@ -12,16 +12,19 @@ import RedirectPage from './components/RedirectPage.jsx'
 import AppProvider from './context.jsx';
 import HomePage from "./pages/HomePage"
 import EditApiPage from "./pages/EditApiPage"
+import EditModel from "./pages/EditModel"
 import './index.scss'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import ErrorPage from './error-page.jsx'
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <RedirectPage><App /></RedirectPage>,
+    errorElement: <ErrorPage />
   },
   {
     path: '/login',
@@ -60,6 +63,10 @@ const router = createBrowserRouter([
         path: ":apiId/model/:modelName",
         element: <ModelPage />
       },
+      {
+        path: ":apiId/model/:modelName/edit",
+        element: <EditModel />
+      }
 
     ]
   },

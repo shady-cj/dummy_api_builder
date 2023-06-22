@@ -3,6 +3,7 @@ import FormCreatePage from "../../components/FormCreatePage"
 import { useParams } from 'react-router-dom'
 import { AppContext } from '../../context'
 import { Bars } from 'react-loader-spinner'
+import ErrorElement from "../../components/ErrorElement"
 const Index = () => {
     const { fetchApiDetail, apiDetail, loading } = useContext(AppContext)
     const params = useParams()
@@ -23,7 +24,7 @@ const Index = () => {
                         wrapperClass="loading_element"
                         visible={true}
                     />
-                </div> :
+                </div> : !loading && !apiDetail ? <ErrorElement /> :
                     <FormCreatePage title="EDIT API" nameValue={apiDetail.name} descValue={apiDetail.description} buttonTitle="EDIT" endpoint={`update_api/${params.apiId}`} method="PUT" />
 
             }

@@ -23,7 +23,7 @@ const Index = ({ navs, activeNav, type }) => {
             <div>
                 <img src={desktop_logo} alt="" onClick={() => navigate('/')} />
                 <ul>
-                    {navs.map((nav, index) => {
+                    {navs?.map((nav, index) => {
 
                         return (<li key={index} className={nav.title === activeNav ? "nav-active" : undefined}>
                             <Link to={nav.path}>{nav.title}</Link>

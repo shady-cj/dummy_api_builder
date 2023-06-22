@@ -31,7 +31,7 @@ const Index = ({ activeID, createApiPage }) => {
                     />
                 </section> : <section className='my_api_list'>
                     {
-                        apis?.map((api) => {
+                        apis && apis.map((api) => {
                             return <article key={api.id} className={`${api.id === +activeID ? 'sidebar_active' : undefined}`} onClick={() => navigate(`/my_apis/${api.id}`)}>
                                 {api.name}
                             </article>
