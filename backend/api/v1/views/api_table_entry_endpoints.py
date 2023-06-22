@@ -167,10 +167,10 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
     if request.method == "PUT":
         data = request.get_json()
         entries = data.get("entries") or []
-        if type(entries) != list or len(entries) != len(table.table_parameters):
-            return jsonify({"error": "Incomplete fields for the model and entries must be a list"}), 400
+        # if type(entries) != list or len(entries) != len(table.table_parameters):
+        #     return jsonify({"error": "Incomplete fields for the model and entries must be a list"}), 400
         # for e  in Entry.query.filter_by(entry_list_id=e_list.id).all()
-        
+        checkpoint = db.session.begin_nested()
         primary_keys = []
         for entry in entries:
             entry_name = entry.get("name")
@@ -200,7 +200,7 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                 continue
             if tbl_p.primary_key:
                 primary_keys.append({"id": tbl_p.id, "value": entry_value})
-            e = Entry.query.filter_by(tableparameter_id=tbl_p.id, entry_list_id=e_list.id)
+            e = Entry.query.filter_by(tableparameter_id=tbl_p.id, entry_list_id=e_list.id).first()
             e.value = entry_value
             if const_type == "fk":
                 relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = entry_value, fk_model_name=f"{table.name.lower()}s").first()
@@ -214,21 +214,27 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                     except:
                         continue
             db.session.add(e)
-        primary_keys_sorted = sorted(primary_keys, key=lambda x: x["id"])
-        primary_key_value = "".join([ str(key["value"]) for key in primary_keys_sorted])
-        # check if primary key already exists
-        if EntryList.query.filter_by(table_id=table.id, primary_key_value=primary_key_value).first():
-            return jsonify({"error": "Primary key already exist"}), 400
-        
-        e_list.primary_key_value = primary_key_value
+        if primary_keys:
+            primary_keys_sorted = sorted(primary_keys, key=lambda x: x["id"])
+            primary_key_value = "".join([ str(key["value"]) for key in primary_keys_sorted])
+            # check if primary key already exists
+            if EntryList.query.filter_by(table_id=table.id, primary_key_value=primary_key_value).first():
+                checkpoint.rollback()
+                return jsonify({"error": "Primary key already exist"}), 400
+            e_list.primary_key_value = primary_key_value
         db.session.commit()
         e_data = {entry.tableparameter.name: entry.value for entry in e_list.entries}            
         return jsonify(e_data), 200
     
     if request.method == "DELETE":
         Entry.query.filter_by(entry_list_id=e_list.id).delete()
+        get_rel = Relationship.query.filter(Relationship.entry_ref_pk==e_list.primary_key_value, Relationship.fk_rel.startswith(f"{api_name}.{model_name}")).first()
+        if get_rel:
+            get_rel.entrylists.clear()
+        Relationship.query.filter(Relationship.entry_ref_pk==e_list.primary_key_value, Relationship.fk_rel.startswith(f"{api_name}.{model_name}")).delete()
         EntryList.query.filter_by(table_id = table.id, primary_key_value = model_id).delete()
-        return jsonify({'message': 'Entry succesfully deleted'}), 204
+        db.session.commit()
+        return jsonify({'message': 'Entry succesfully deleted'}), 204 # NO content afterall
 
     if request.method == "GET":
         data = {}
@@ -249,6 +255,4 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                 rel_key_data[rel.fk_model_name].append(rel_data)
             rel_list.append(rel_key_data)
         data["relationships"] = rel_list
-        return jsonify(data), 200
-
         return jsonify(data), 200
