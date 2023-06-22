@@ -58,6 +58,9 @@ const Index = () => {
                                     <th>
                                         Field Constraints
                                     </th>
+                                    <th>
+                                        FK Ref. Table
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,6 +71,7 @@ const Index = () => {
                                             <td>{tbl_param.datatype}</td>
                                             <td>{tbl_param.dt_length || "Null"}</td>
                                             <td>{tbl_param.constraints.join(", ")}</td>
+                                            <td>{tbl_param.foreign_key_rf || "N/A"}</td>
                                         </tr>
                                     })
                                 }

@@ -120,6 +120,12 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
                                                 <option value="nullable" selected={currentTbl_params?.constraints?.includes("nullable") ? true : false}>Nullable</option>
                                             </select>
                                         </div>
+                                        <div>
+                                            {/*  */}
+                                            <label htmlFor={`field-fk-ref-${field}`}>Foreign Key Reference Table</label>
+                                            <input type="text" id={`field-fk-ref-${field}`} name={`foreign_key_rf-${field}`} placeholder="api.table" value={currentTbl_params?.foreign_key_rf || ""} onChange={handleChange} />
+
+                                        </div>
                                         <button type="button" style={{ float: "right" }} onClick={() => {
                                             setFieldList((prev) => prev.filter(v => v != field));
                                             setModelParam(prevModelP => ({ ...prevModelP, tbl_params: prevModelP.tbl_params.filter((entry) => entry.index != field) }))
