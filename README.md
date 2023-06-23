@@ -1,5 +1,4 @@
-				                                    # DummyApi Builder
-		## "Easily create API, Streamline your work flow with ease, Confidence in data manipulation and Data managment."
+# DummyApi Builder
 ## "Easily create API, Streamline your work flow with ease, Confidence in data manipulation and Data managment."
 
 
@@ -8,13 +7,13 @@
 - [x] Supports GET, POST, PUT and DELETE requests
 - [x] Generates random REST API endpoints 
 - [x] Allows customization of endpoint paths
-- [x] Can generate string, number, date and enum parameters
+- [x] Can generate string, number, date data types
+- [x] Ability to create relationships such as foreign key
+- [x] Ability to add multiple primary key fields and other common constraints 
 - [x] Generates sample JSON response bodies 
-- [x] Option to save and load API definitionsea 
+- [x] Option to save and load API definitions
 - [x] Integration with API tools
-- [x] Automated API testing
 - [x] Modeling of relationships between API resources 
-- [x] Support for generating sample API code in multiple languages
 
 ### Why You Should Use DummyApi
 
@@ -52,7 +51,23 @@ It offers an intuitive approach, eliminating unnecessary complexities and time-c
 
 
 ### Requirements:
+- Basic Programming knowledge
+- Basic API knowledge(how to define relationships)
 
+### Who this is for?
+This tool allows you to create simple apis for consumption, thus providing a quick way of creating an api, and simple relationships. This tool is useful for 
+- Frontend Developers who needs to quickly create an endpoint for testing the applications
+- Backend developers who wants to create a large scale api and need to breakdown the workflow into simpler units (You can quickly create simple apis and create relationship between this apis for testing purposes in order to envision how to build the larger api service)
+- Can be used in very small scale applications.
+
+### Limitations
+This tool is simple tool and you can also infer that from the title of the project. So before you consider using it here are the limitations
+- Cannot be used in medium-large scale applications
+- Cannot be used in small-scale applications that requires very complex api relationship
+- Relationships such as many-many and one-one isn't implemented in v1(perhaps in v2)
+- Rigidity in how you get back your data (little or no flexibilty to run complex queries) (perhaps in the coming versions)
+- Endpoints are fixed and enforces strictly you follow the format in order to make most use of the api (we'll see that in the usage section of this docs)
+- This application is still being tested and might break at any point
 
 
 ## Contributors
