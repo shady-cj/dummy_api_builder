@@ -1,6 +1,6 @@
 import "./index.scss"
 import { useState } from "react"
-// import { hostUrl } from "../../variables";
+import { hostUrl } from "../../variables";
 
 const Index = () => {
     const [endpointParam, setEndpointParam] = useState({ "url": "", "method": "GET", "data": "" });
@@ -59,13 +59,17 @@ const Index = () => {
                 <p>
                     Copy your api id from you user profile at the top right corner. (in the dropdown click on the &lsquo;copy&rsquo;  button next to &lsquo;Api id&rsquo;)
                 </p>
+                <p>
+                    Format: <b>{"hostUrl/api/v1/<your_api_Id>/my_api/<Api_name>/model/<Model_name>/<optional: model_id>"}</b>
+
+                </p>
                 <small>Note: Do not share this id. refer to the <a href="https://github.com/shady-cj/dummy_api_builder/blob/main/README.md" target="_blank" rel="noreferrer">docs</a> for more info</small>
             </section>
             <section className="endpoint_form">
                 <form action="" onSubmit={handleSubmit}>
                     <div>
                         <label htmlFor="url">Endpoint</label>
-                        <input type="text" onChange={handleChange} id="url" name="url" value={endpointParam.url} placeholder="dummyapibuilder.com/api/v1/<yourapiId>/my_api/<Api_name>/model/<Model_name>/{model_id}" />
+                        <input type="text" onChange={handleChange} id="url" name="url" value={endpointParam.url} placeholder={`${hostUrl}/api/v1/<your_api_Id>/my_api/<Api_name>/model/<Model_name>/{model_id}`} />
                     </div>
                     <div>
                         <label htmlFor="method">Method</label>
