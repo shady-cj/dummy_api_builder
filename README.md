@@ -81,7 +81,18 @@ which is a very simple process. For this project to work properly you'll need bo
 
 ![Ubuntu22 04 (Snapshot 8)  Running  - Oracle VM VirtualBox 6_23_2023 7_51_47 AM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/f4278149-cbaa-4a3c-b0bd-c466e1e328df)
 
-
+- Also cd into frontend/dummy_api_frontend/
+- run `npm install`
+- Afterwards run `npm run dev`
+- To let the frontend know about the backend create a `.env` file in the folder where you run `npm install` and add an environment variable in the file
+  ```
+  VITE_HOST_URL=http://127.0.0.1:5900
+  ```
+  Depending on the interface your backend app is running but most likely it'll be localhost `127.0.0.1` but if you're like me and you want to run the backend from a virtual machine and the frontend on your desktop, substitute the ip with the ip address exposed by your virtual machine. The port by default is `5900` you can change that by editing the `app.py` in `backend/api/v1` and make sure to update the port in your frontend `.env` file. Then your application should be up and running, you can go ahead and create an account and login. By default it uses a sqlite database you can also change that if you're familiar with sql alchemy by editing the line
+  ```
+  app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Database.db'
+  ```
+  in `backend/api/v1/app.py` 
 
 ## Contributors
 * **Peter Erinfolami** 
