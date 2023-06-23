@@ -69,9 +69,21 @@ This tool is simple tool and you can also infer that from the title of the proje
 - Endpoints are fixed and enforces strictly you follow the format in order to make most use of the api (we'll see that in the usage section of this docs)
 - This application is still being tested and might break at any point
 
+### Usage
+As at the writing of this docs, the application hasn't been fully deployed into production so to test it you might have to configure it yourself, 
+which is a very simple process. For this project to work properly you'll need both the frontend and backend fully running. To run locally you must have python (version 3.6 and above) and node (preferably version 18 and above) installed on your machine
+#### Steps
+- clone the project repo.
+- change directory into the backend, create a virtual environment(if necessary and activate) then run `pip install -r requirements.txt`. It might be important to use a virtual environment to avoid conflicting with your installed packages.
+- After full installation of the dependencies fully, run `python3 -m api.v1.app` on windows simply use `python` instead and you should have your application running in `debug mode`
+
+![Ubuntu22 04 (Snapshot 8)  Running  - Oracle VM VirtualBox 6_23_2023 7_50_44 AM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/c6531749-41b4-4868-8871-84023454f22f)
+
+![Ubuntu22 04 (Snapshot 8)  Running  - Oracle VM VirtualBox 6_23_2023 7_51_47 AM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/f4278149-cbaa-4a3c-b0bd-c466e1e328df)
+
+
 
 ## Contributors
-
 * **Peter Erinfolami** 
     * **Github** (https://github.com/shady-cj)
     * **Linkdin** www.linkedin.com/in/erinfolamipeter/
