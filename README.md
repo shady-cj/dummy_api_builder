@@ -107,11 +107,11 @@ which is a very simple process. For this project to work properly you'll need bo
     * **Email** owolabikehinde250@gmail.com
     * **Twitter** https://twitter.com/Elder_Choco
 
-* **Kehinde Owolabi**
-    * **Github** https://github.com/owolabi250
-    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
-    * **Email** owolabikehinde250@gmail.com
-    * **Twitter** https://twitter.com/Elder_Choco
+* **Kenneth Igbo**
+    * **Github** https://github.com/CodeRaiden
+    * **Linkdin** https://www.linkedin.com/in/kenneth-igbo-b26bb5208/
+    * **Email** Hadoken10@yahoo.com
+    * **Twitter** https://twitter.com/KenRaiden7
 
 * **Kehinde Owolabi**
     * **Github** https://github.com/owolabi250
