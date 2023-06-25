@@ -75,6 +75,10 @@ which is a very simple process. For this project to work properly you'll need bo
 #### Steps
 - clone the project repo.
 - change directory into the backend, create a virtual environment(if necessary and activate) then run `pip install -r requirements.txt`. It might be important to use a virtual environment to avoid conflicting with your installed packages.
+- Create a `.env` file in the backend folder and create an environment variable for the secret key for encoding sessions(Jwt).
+```
+SECRET=<random_value>
+```
 - After full installation of the dependencies fully, run `python3 -m api.v1.app` on windows simply use `python` instead and you should have your application running in `debug mode`
 
 ![Ubuntu22 04 (Snapshot 8)  Running  - Oracle VM VirtualBox 6_23_2023 7_50_44 AM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/c6531749-41b4-4868-8871-84023454f22f)
