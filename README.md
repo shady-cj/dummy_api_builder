@@ -117,12 +117,6 @@ SECRET=<random_value>
     * **Email** Hadoken10@yahoo.com
     * **Twitter** https://twitter.com/KenRaiden7
 
-* **Kehinde Owolabi**
-    * **Github** https://github.com/owolabi250
-    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
-    * **Email** owolabikehinde250@gmail.com
-    * **Twitter** https://twitter.com/Elder_Choco
-
 ## Contributing
 
 Like **DummyApi Builder**? Thanks!!!
