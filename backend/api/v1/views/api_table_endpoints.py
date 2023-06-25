@@ -45,6 +45,7 @@ def create_model(user, api_id):
     new_table = Table(name=name, description=description, api_id=api_id)
     db.session.add(new_table)
     db.session.commit()
+    primary_key_present = False
     for param in table_parameters:
         param_name = param.get("name")
         param_dt = param.get("datatype")
@@ -52,38 +53,87 @@ def create_model(user, api_id):
         constraints = param.get("constraints") or []
         try:
             if TableParameter.query.filter_by(name=param_name, table_id=new_table.id).first():
+                TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                for tp in TPs:
+                    tp.constraints.clear()
+                TPs.delete()
+                Table.query.filter_by(name=name, api_id=api_id).delete()
+                db.session.commit()
                 return jsonify({"error": "name of table parameter already exist for this table, it must be unique"}), 400
             if not validate_dtType(param_dt):
+                TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                for tp in TPs:
+                    tp.constraints.clear()
+                TPs.delete()
+                Table.query.filter_by(name=name, api_id=api_id).delete()
+                db.session.commit()
                 return jsonify({"error": "invalid data type"}), 400
             if not validate_name(param_name):
+                TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                for tp in TPs:
+                    tp.constraints.clear()
+                TPs.delete()
+                Table.query.filter_by(name=name, api_id=api_id).delete()
+                db.session.commit()
                 return jsonify({"error": "invalid name(must be a valid python identifier) and not a python keyword"}), 400
             try:
                 if param_dt_length:
                     param_dt_length = int(param_dt_length) or None
             except ValueError:
+                TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                for tp in TPs:
+                    tp.constraints.clear()
+                TPs.delete()
+                Table.query.filter_by(name=name, api_id=api_id).delete()
+                db.session.commit()
                 return jsonify({"error": "invalid data type length"})
             p = TableParameter(name=param_name, data_type=param_dt, dataType_length=param_dt_length, table_id=new_table.id)
             if "primary_key" in constraints and "nullable" in constraints:
                 constraints.remove("nullable")
             for const in constraints:
                 if not validate_constraint(const):
+                    TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                    for tp in TPs:
+                        tp.constraints.clear()
+                    TPs.delete()
+                    Table.query.filter_by(name=name, api_id=api_id).delete()
+                    db.session.commit()
                     return jsonify({"error": "invalid constraint"}), 400
                 if const == "foreign_key":
                     fk_rf = param.get("foreign_key_rf") #expected format(api.table)
                     if not fk_rf:
+                        TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                        for tp in TPs:
+                            tp.constraints.clear()
+                        TPs.delete()
+                        Table.query.filter_by(name=name, api_id=api_id).delete()
+                        db.session.commit()
                         return jsonify({"error": "Expected a foreign key reference field."}), 400
                     f_api, f_table = fk_rf.split(".")
                     r_api = Api.query.filter_by(name=f_api, user_id=user.id).first()
                     if not r_api:
+                        TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                        for tp in TPs:
+                            tp.constraints.clear()
+                        TPs.delete()
+                        Table.query.filter_by(name=name, api_id=api_id).delete()
+                        db.session.commit()
                         return jsonify({"error": "Api name referenced in the foreign key doesn't exist"}), 400
                     r_table = Table.query.filter_by(name=f_table, api_id=r_api.id).first()
                     if not r_table:
+                        TPs = TableParameter.query.filter_by(table_id=new_table.id)
+                        for tp in TPs:
+                            tp.constraints.clear()
+                        TPs.delete()
+                        Table.query.filter_by(name=name, api_id=api_id).delete()
+                        db.session.commit()
                         return jsonify({"error", "Table name referenced doesn't exist"}), 400
                     # r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
                     # if not r_field:
                     #     return jsonify({"error": "Field name referenced doesn't exist"}), 400
                     p.foreign_key_reference_field = fk_rf
                 if const == "primary_key":
+                    primary_key_present = True
                     p.primary_key = True
                 
                 get_c = Constraint.query.filter_by(name=const).first()
@@ -94,9 +144,22 @@ def create_model(user, api_id):
             db.session.add(p)
             db.session.commit()
         except Exception as e:
-            print(e)
+            TPs = TableParameter.query.filter_by(table_id=new_table.id)
+            for tp in TPs:
+                tp.constraints.clear()
+            TPs.delete()
+            Table.query.filter_by(name=name, api_id=api_id).delete()
+            db.session.commit()
             return jsonify({"error": "Something went wrong"}), 400
     db.session.commit()
+    if not primary_key_present:
+        TPs = TableParameter.query.filter_by(table_id=new_table.id)
+        for tp in TPs:
+            tp.constraints.clear()
+        TPs.delete()
+        Table.query.filter_by(name=name, api_id=api_id).delete()
+        db.session.commit()
+        return jsonify({"error": "Table must contain atleast one primary key"})
     return jsonify({"id": new_table.id, "name": new_table.name, "desc": new_table.description})
 
 
@@ -122,7 +185,6 @@ def update_model(user, api_id, model_name):
         get_table.name = name
     if description:
         get_table.description = description
-    
     for param in table_parameters:
         param_name = param.get("name")
         param_dt = param.get("datatype")

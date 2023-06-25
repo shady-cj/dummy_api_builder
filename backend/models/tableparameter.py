@@ -33,5 +33,5 @@ class TableParameter(db.Model):
     dataType_length = db.Column(db.Integer, nullable=True) # Only valid for strings, text, integers
     table_id = db.Column(db.Integer, db.ForeignKey('table.id'))
     table = db.relationship('Table', back_populates='table_parameters')
-    constraints = db.relationship('Constraint', secondary=parameter_constraints, backref='table_parameters')
+    constraints = db.relationship('Constraint', secondary=parameter_constraints, backref='table_parameters', cascade="all, delete")
     entries = db.relationship('Entry', back_populates='tableparameter', cascade="all, delete")
