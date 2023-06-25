@@ -101,19 +101,19 @@ SECRET=<random_value>
 ## Contributors
 * **Peter Erinfolami** 
     * **Github** (https://github.com/shady-cj)
-    * **Linkdin** www.linkedin.com/in/erinfolamipeter/
+    * **Linkedin** www.linkedin.com/in/erinfolamipeter/
     * **Email** petersp2000@gmail.com
     * **Twitter** https://twitter.com/shady_cj
 
 * **Kehinde Owolabi**
     * **Github** https://github.com/owolabi250
-    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
+    * **Linkedin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
     * **Email** owolabikehinde250@gmail.com
     * **Twitter** https://twitter.com/Elder_Choco
 
 * **Kenneth Igbo**
     * **Github** https://github.com/CodeRaiden
-    * **Linkdin** https://www.linkedin.com/in/kenneth-igbo-b26bb5208/
+    * **Linkedin** https://www.linkedin.com/in/kenneth-igbo-b26bb5208/
     * **Email** Hadoken10@yahoo.com
     * **Twitter** https://twitter.com/KenRaiden7
 
