@@ -36,6 +36,14 @@
 
 | 🍰 Flexibility | | | ✓ |
 
+
+
+## Contents
+- [Overview](#overview)
+- [Requirements](#requirements)
+- [Who this is for?](#who-this-is-for?)
+- 
+
 ## Overview
 ### Easily Create API
 With our powerful web application, you'll effortlessly create APIs in no time, empowering you to perform essential CRUD operations (Create, Retrieve, Update, Delete) on your data.
@@ -50,7 +58,7 @@ Dummy API builder equips you with the tools and functionality to manipulate your
 It offers an intuitive approach, eliminating unnecessary complexities and time-consuming processes. With Dummy API builder, you can make the most of your data without hassle.
 
 
-## Requirements:
+## Requirements
 - Basic Programming knowledge
 - Basic API knowledge(how to define relationships)
 
