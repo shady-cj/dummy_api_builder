@@ -5,11 +5,13 @@ import desktop_logo from "../../assets/logo_desktop.svg"
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { hostUrl } from '../../variables';
+import { Rings } from 'react-loader-spinner';
 
-const index = () => {
+const Index = () => {
     const navigate = useNavigate();
     const [credentials, setCredentials] = useState({ email: "", password: "", confirm_password: "" })
     const [status, setStatus] = useState({ type: "", message: "" })
+    const [loading, setLoading] = useState(false)
     const handleChange = (e) => {
         if (status.type.length)
             setStatus({ type: "", message: "" });
@@ -18,37 +20,49 @@ const index = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         setStatus({ type: "", message: "" });
-        if (!credentials.password && !credentials.email)
+        if (!credentials.password && !credentials.email) {
+            setStatus({ type: "error", message: "All fields must be filled" });
             return;
+
+        }
         if (credentials.password !== credentials.confirm_password) {
             setStatus({ type: "error", message: "Passwords must match" });
             return;
         }
-
-        const req = await fetch(`${hostUrl}/api/v1/signup`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "email": credentials.email,
-                "password": credentials.password,
-                "confirm_password": credentials.confirm_password
+        setLoading(true)
+        try {
+            const req = await fetch(`${hostUrl}/api/v1/signup`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "email": credentials.email,
+                    "password": credentials.password,
+                    "confirm_password": credentials.confirm_password
+                })
             })
-        })
-        // console.log(req, req.statusText)
-        const data = await req.json();
-        console.log(data, req.status)
-        if (req.status === 401)
-            setStatus({ type: "error", message: data.error })
-        else if (req.status === 202)
-            setStatus({ type: "redirect", message: data.message })
-        else if (req.status === 201) {
-            setStatus({ type: "success", message: data.message })
-            setTimeout(() => {
-                navigate('/login')
-            }, 3000)
+            // console.log(req, req.statusText)
+            const data = await req.json();
+            console.log(data, req.status)
+            if (req.status === 401)
+                setStatus({ type: "error", message: data.error })
+            else if (req.status === 202)
+                setStatus({ type: "redirect", message: data.message })
+            else if (req.status === 201) {
+                setStatus({ type: "success", message: data.message })
+                setTimeout(() => {
+                    navigate('/login')
+                }, 3000)
+            }
+        } catch (err) {
+            setStatus({ type: "error", message: "Something went wrong" })
+        } finally {
+            setLoading(false)
         }
+
+
+
     }
     const navs = [
         {
@@ -96,7 +110,23 @@ const index = () => {
                             }
 
 
-                            <button type="submit">REGISTER</button>
+                            <button type="submit">
+                                {
+                                    loading ?
+
+                                        <Rings
+                                            height="30"
+                                            width="30"
+                                            color="#FFF"
+                                            radius="6"
+                                            wrapperStyle={{}}
+                                            wrapperClass="auth-spinner"
+                                            visible={true}
+                                            ariaLabel="rings-loading"
+                                        /> : "Register"
+                                }
+
+                            </button>
                         </form>
                         <Link to="/login">Already have an account?</Link>
                     </section>
@@ -107,4 +137,4 @@ const index = () => {
     )
 }
 
-export default index
+export default Index

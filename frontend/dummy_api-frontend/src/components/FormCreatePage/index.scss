@@ -31,14 +31,28 @@ div.create-wrapper {
                 width: 45%;
                 padding: 0.6rem 0;
                 border-radius: 8px;
+                height: 2rem;
                 border: none;
                 background-color: $primary_color;
                 color: white;
                 cursor: pointer;
                 font-weight: 600;
+                display: flex;
+                justify-content: center;
+                align-items: center;
                 &:hover {
                     background-color: lighten($primary_color, 10%);
                 }
+                .api-create_spinner {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+            .api_create_error_card {
+                @include basic_error_card;
             }
         }
     }
