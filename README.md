@@ -39,10 +39,15 @@
 
 
 ## Contents
-- [Overview](#overview)
+- [Overview](#overview) 
 - [Requirements](#requirements)
-- [Who this is for?](#who-this-is-for?)
-- 
+- [Who this is for?](#who-this-is-for-?)
+- [Limitations](#limitations)
+- [Setting Up](#setting-up)
+- [Using the application](#using-the-application)
+    - [Creating an API](#creating-an-api)
+    - [Adding a Model to the API](#adding-a-model-to-the-api)
+    - [Updating api and models](#updating-api-and-models)
 
 ## Overview
 ### Easily Create API
@@ -174,7 +179,7 @@ To create a model field, you can just click on the `Add Field` button, the neces
 
 **Date & Datetime** are validated through dateutil.parser so any valid `strftime()`(for python) formatted date and datetime would be work. (Basically just use a valid date format and it works).
 
-### Updating api and models:
+### Updating api and models
 - An Api cannot be updated if it already has models associated to it.
 - A model cannot be updated if it already has entries/data in it.
 - A model field constraints cannot be removed, it can only be appended to. 
@@ -200,23 +205,23 @@ To create a model field, you can just click on the `Add Field` button, the neces
     * **Email** Hadoken10@yahoo.com
     * **Twitter** https://twitter.com/KenRaiden7
 
-## Contributing
+## Contribute
 
 Like **DummyApi Builder**? Thanks!!!
 
 At the same time, we need your help
 
-### Finding Bugs
+## Finding Bugs
 
 DummyApi is just getting started. If you could help us find or fix potential bugs, we would be grateful!
 
 Have a bug or a feature request? [Please open a new issue](https://github.com/shady-cj/dummy_api_builder/issues)
 
-### New Features
+## New Features
 
 Have some awesome ideas? Feel free to open an issue or submit your pull request directly!
 
-### Documentation improvements.
+## Documentation improvements.
 
 Improvements to README and documentation are welcome at all times, whether typos or our lame English. 🤣.
 
