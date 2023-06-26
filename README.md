@@ -41,7 +41,7 @@
 ## Contents
 - [Overview](#overview) 
 - [Requirements](#requirements)
-- [Who this is for?](#who-this-is-for-?)
+- [Who this is for?](#who-this-is-for)
 - [Limitations](#limitations)
 - [Setting Up](#setting-up)
 - [Using the application](#using-the-application)
@@ -67,7 +67,7 @@ It offers an intuitive approach, eliminating unnecessary complexities and time-c
 - Basic Programming knowledge
 - Basic API knowledge(how to define relationships)
 
-## Who this is for?
+## Who this is for
 This tool allows you to create simple apis for consumption, thus providing a quick way of creating an api, and simple relationships. This tool is useful for 
 - Frontend Developers who needs to quickly create an endpoint for testing the applications
 - Backend developers who wants to create a large scale api and need to breakdown the workflow into simpler units (You can quickly create simple apis and create relationship between this apis for testing purposes in order to envision how to build the larger api service)
