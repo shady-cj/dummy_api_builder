@@ -6,6 +6,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 import Cookies from 'js-cookie'
 import { hostUrl } from '../../variables';
+import { Rings } from "react-loader-spinner"
 
 
 function Index() {
@@ -13,6 +14,7 @@ function Index() {
     const navigate = useNavigate()
     const [credentials, setCredentials] = useState({ email: "", password: "" })
     const [status, setStatus] = useState({ type: "", message: "" })
+    const [loading, setLoading] = useState(false)
 
     const handleChange = (e) => {
         if (status.type.length)
@@ -22,31 +24,40 @@ function Index() {
     const handleSubmit = async e => {
         e.preventDefault()
         setStatus({ type: "", message: "" });
-        if (!credentials.password && !credentials.email)
+        if (!credentials.password && !credentials.email) {
+            setStatus({ type: "error", message: "All fields must be filled" })
             return;
-        const req = await fetch(`${hostUrl}/api/v1/login`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "email": credentials.email,
-                "password": credentials.password,
+        }
+        setLoading(true)
+        try {
+            const req = await fetch(`${hostUrl}/api/v1/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    "email": credentials.email,
+                    "password": credentials.password,
+                })
             })
-        })
-        // console.log(req, req.statusText)
-        const data = await req.json();
-        if (req.status === 401)
-            setStatus({ type: "error", message: data.error })
-        else if (req.status === 200) {
-            setStatus({ type: "success", message: "Login Succesful" })
-            Cookies.set('token', data.token, { path: '/', expires: (1 / 24) })
-            setTimeout(() => {
-                if (location.state?.path)
-                    navigate(location.state.path)
-                else
-                    navigate('/my_apis')
-            }, 2000)
+            // console.log(req, req.statusText)
+            const data = await req.json();
+            if (req.status === 401)
+                setStatus({ type: "error", message: data.error })
+            else if (req.status === 200) {
+                setStatus({ type: "success", message: "Login Succesful" })
+                Cookies.set('token', data.token, { path: '/', expires: (1 / 24) })
+                setTimeout(() => {
+                    if (location.state?.path)
+                        navigate(location.state.path)
+                    else
+                        navigate('/my_apis')
+                }, 2000)
+            }
+        } catch (err) {
+            setStatus({ type: "error", message: "Sorry!, an error occured" })
+        } finally {
+            setLoading(false)
         }
     }
     const navs = [
@@ -91,7 +102,21 @@ function Index() {
                                 </div>)
                             }
 
-                            <button type="submit">Login</button>
+                            <button type="submit">
+                                {loading ?
+                                    <Rings
+                                        height="30"
+                                        width="30"
+                                        color="#FFF"
+                                        radius="6"
+                                        wrapperStyle={{}}
+                                        wrapperClass="auth-spinner"
+                                        visible={true}
+                                        ariaLabel="rings-loading"
+                                    /> : "Login"
+                                }
+
+                            </button>
                         </form>
                         <Link to="/register">Create a new account</Link>
                     </section>

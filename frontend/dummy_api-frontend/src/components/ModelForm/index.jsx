@@ -3,14 +3,20 @@ import { useState } from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import Cookies from "js-cookie"
 import { hostUrl } from "../../variables"
+import { Rings } from "react-loader-spinner"
 const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
     const params = useParams();
     const navigate = useNavigate()
     const token = Cookies.get('token', { path: '/' })
     const [fieldList, setFieldList] = useState(fList || [])
     const [modelParam, setModelParam] = useState(mParam)
+    const [loading, setLoading] = useState(false)
+    const [state, setState] = useState({ type: "", message: "" })
 
     const handleChange = e => {
+        if (state.type) {
+            setState({ type: "", message: "" })
+        }
         const splitText = e.target.name.split("-")
         if (splitText.length === 1) {
             let value = e.target.value;
@@ -51,20 +57,35 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
     }
     const handleSubmit = async e => {
         e.preventDefault()
-        if (!modelParam.name) return;
-        const res = await fetch(`${hostUrl}/api/v1/my_api/${params.apiId}/${endpoint}`, {
-            method: method,
-            headers: {
-                "Content-Type": "application/json",
-                "x-access-token": token
-            },
-            body: JSON.stringify(modelParam)
-        })
-        const data = await res.json()
-        // console.log(data)
-        if (res.status == 200) {
-            navigate(`/my_apis/${params.apiId}/model/${data.name}`)
-        } else navigate(`/my_apis/${params.apiId}`)
+        setState({ type: "", message: "" })
+        if (!modelParam.name) {
+            setState({ type: "error", message: "Provide Model Name" })
+            return;
+        }
+        setLoading(true)
+
+        try {
+            const res = await fetch(`${hostUrl}/api/v1/my_api/${params.apiId}/${endpoint}`, {
+                method: method,
+                headers: {
+                    "Content-Type": "application/json",
+                    "x-access-token": token
+                },
+                body: JSON.stringify(modelParam)
+            })
+            const data = await res.json()
+            // console.log(data)
+            if (res.status == 200) {
+                navigate(`/my_apis/${params.apiId}/model/${data.name}`)
+            } else {
+                setState({ type: "error", message: data.error || "Couldn't complete the request" })
+            }
+        } catch (err) {
+            setState({ type: "error", message: "Something went wrong" })
+        } finally {
+            setLoading(false)
+        }
+
 
     }
     return (
@@ -147,7 +168,28 @@ const Index = ({ fList, mParam, endpoint, title, btnTitle, method }) => {
 
                         }}>Add Field</button>
                     </section>
-                    <button className="model-submit_btn">{btnTitle}</button>
+                    {
+                        state.type === "error" && <div className="model_create_error_card">
+                            {state.message}
+                        </div>
+                    }
+                    <button className="model-submit_btn">
+
+                        {
+                            loading ?
+                                <Rings
+                                    height="30"
+                                    width="30"
+                                    color="#FFF"
+                                    radius="6"
+                                    wrapperStyle={{}}
+                                    wrapperClass="model-create_spinner"
+                                    visible={true}
+                                    ariaLabel="rings-loading"
+                                /> : btnTitle
+                        }
+
+                    </button>
                 </form>
             </section>
 

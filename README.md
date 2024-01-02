@@ -15,7 +15,7 @@
 - [x] Integration with API tools
 - [x] Modeling of relationships between API resources 
 
-### Why You Should Use DummyApi
+## Why You Should Use DummyApi
 
 | --- | :---: | :---: | :---: |
 
@@ -36,8 +36,21 @@
 
 | 🍰 Flexibility | | | ✓ |
 
-### Overview
-#### Easily Create API
+
+
+## Contents
+- [Overview](#overview) 
+- [Requirements](#requirements)
+- [Who this is for?](#who-this-is-for)
+- [Limitations](#limitations)
+- [Setting Up](#setting-up)
+- [Using the application](#using-the-application)
+    - [Creating an API](#creating-an-api)
+    - [Adding a Model to the API](#adding-a-model-to-the-api)
+    - [Updating api and models](#updating-api-and-models)
+
+## Overview
+### Easily Create API
 With our powerful web application, you'll effortlessly create APIs in no time, empowering you to perform essential CRUD operations (Create, Retrieve, Update, Delete) on your data.
 
 ### Streamline Your Workflow with Ease
@@ -50,17 +63,17 @@ Dummy API builder equips you with the tools and functionality to manipulate your
 It offers an intuitive approach, eliminating unnecessary complexities and time-consuming processes. With Dummy API builder, you can make the most of your data without hassle.
 
 
-### Requirements:
+## Requirements
 - Basic Programming knowledge
 - Basic API knowledge(how to define relationships)
 
-### Who this is for?
+## Who this is for
 This tool allows you to create simple apis for consumption, thus providing a quick way of creating an api, and simple relationships. This tool is useful for 
 - Frontend Developers who needs to quickly create an endpoint for testing the applications
 - Backend developers who wants to create a large scale api and need to breakdown the workflow into simpler units (You can quickly create simple apis and create relationship between this apis for testing purposes in order to envision how to build the larger api service)
 - Can be used in very small scale applications.
 
-### Limitations
+## Limitations
 This tool is simple tool and you can also infer that from the title of the project. So before you consider using it here are the limitations
 - Cannot be used in medium-large scale applications
 - Cannot be used in small-scale applications that requires very complex api relationship
@@ -69,10 +82,10 @@ This tool is simple tool and you can also infer that from the title of the proje
 - Endpoints are fixed and enforces strictly you follow the format in order to make most use of the api (we'll see that in the usage section of this docs)
 - This application is still being tested and might break at any point
 
-### Usage
+## Setting up
 As at the writing of this docs, the application hasn't been fully deployed into production so to test it you might have to configure it yourself, 
 which is a very simple process. For this project to work properly you'll need both the frontend and backend fully running. To run locally you must have python (version 3.6 and above) and node (preferably version 18 and above) installed on your machine
-#### Steps
+### Steps
 - clone the project repo.
 - change directory into the backend, create a virtual environment(if necessary and activate) then run `pip install -r requirements.txt`. It might be important to use a virtual environment to avoid conflicting with your installed packages.
 - Create a `.env` file in the backend folder and create an environment variable for the secret key for encoding sessions(Jwt).
@@ -96,50 +109,119 @@ SECRET=<random_value>
   ```
   app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Database.db'
   ```
-  in `backend/api/v1/app.py` 
+  in `backend/api/v1/app.py`
+
+## Using the application
+
+### Creating an API
+Go ahead and create an account and login.![daB - Google Chrome 6_26_2023 12_41_21 PM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/61b3b107-578a-4861-8bff-2dbefaf73ac5)
+
+Creating an api is easy, navigate to the create api page and provide the name of the api (required) and the description (optional).
+
+![daB - Google Chrome 6_26_2023 12_53_24 PM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/032db2bb-d434-475c-a390-0736fbfa8005)
+
+![daB - Google Chrome 6_26_2023 12_53_48 PM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/f95e83f5-45f9-4460-b6f4-319d791f2a55)
+
+#### :warning: IMPORTANT NOTE
+
+While creating an api, all names(like api name, model name, field name) must be a valid python identifier, not a [python keyword](https://www.w3schools.com/python/python_ref_keywords.asp) and must be atleast 3 characters.
+To know about python identifiers here is an [article](https://www.digitalocean.com/community/tutorials/python-keywords-identifiers) to understand more.
+
+### Adding a Model to the API
+To add a model to the API here are the fields to fill:
+- **Model Name**: Name of the model (required).
+- **Description**: The description of the model (optional).
+
+These are the basic information needed. But that's not enough to create a model. Suppose we wanted to create a Model in Python(Flask or Django) we'll have something like this.
+```
+class User(db.Model):
+  _id = db.IntegerField()
+  name = db.StringField()
+  email = db.EmailField()
+```
+To create a model field, you can just click on the `Add Field` button, the necessary information to provide are:
+- **Field Name**:
+    - Field is required
+    - The name of the model field(e.g _id, name, email).
+    - Must be a valid python identifier
+    - Must be atleast 3 characters or more.
+    - if you need have an `id` use `_id` instead.
+    - Mustn't be a python keyword
+- **Max Length**:
+    - Field is optional
+    - The maximum length of characters (This only works for string or text data types)
+- **Field Data Type**:
+    - Field is required 
+    - Integer: Valid integers only (no decimals or floats)
+    - String: Any string (if you need to store strings that would be greater than 100 characters, you should use the Text data type)
+    - Text: Large texts (e.g descriptions, rich texts etc...)
+    - Boolean: Takes only true of false value (format ("True" | "False") )
+    - Date: Takes any valid date look at valid date formats in python [here](https://www.geeksforgeeks.org/how-to-format-date-using-strftime-in-python/)
+    - Datetime: Same as date look at valid formats [here](https://www.programiz.com/python-programming/datetime)
+- **Constraints**:
+    - Field is optional
+    - More than one constraints can be selected
+    - Primary Key: 
+        - There must be atleast a field with this option selected (The model won't be created if not)
+        - There can be more tha one primary key for a model. (The behavior is it concatenates the fields together in the other they were marked primary keys, e.g _id+email="1example@gmail.com").
+    - Foreign Key:
+        - if this model field is tagged as a foreign key then it's mandatory to fill up the `Foreign Key Reference Table`
+        - Creates a relationship with another table, which can be in another api. 
+    - Unique: Ensures that the field is unique
+    - Nullable:
+        - Ensures that the field can be null
+        - if you already add a key to be primary key you cannot mark it to be nullable, if such happens the nullable constraint would be dropped
+- **Foreign Key Reference Table**:
+    - Field is optional, mandatory if the model field has a `Foreign Key` constraints.
+    - Uses the `api.table` format
+    - `api` refers to the api to create the relationship with, The api must be an existing api
+    - `table` refers to the model/table to create the relationship with, The table must be an existing table 
+
+**Date & Datetime** are validated through dateutil.parser so any valid `strftime()`(for python) formatted date and datetime would be work. (Basically just use a valid date format and it works).
+
+### Updating api and models
+- An Api cannot be updated if it already has models associated to it.
+- A model cannot be updated if it already has entries/data in it.
+- A model field constraints cannot be removed, it can only be appended to. 
+
+
 
 ## Contributors
-* **Peter Erinfolami** 
+* **Peter Erinfolami**
     * **Github** (https://github.com/shady-cj)
-    * **Linkdin** www.linkedin.com/in/erinfolamipeter/
+    * **Linkedin** www.linkedin.com/in/erinfolamipeter/
     * **Email** petersp2000@gmail.com
     * **Twitter** https://twitter.com/shady_cj
 
 * **Kehinde Owolabi**
     * **Github** https://github.com/owolabi250
-    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
+    * **Linkedin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
     * **Email** owolabikehinde250@gmail.com
     * **Twitter** https://twitter.com/Elder_Choco
 
 * **Kenneth Igbo**
     * **Github** https://github.com/CodeRaiden
-    * **Linkdin** https://www.linkedin.com/in/kenneth-igbo-b26bb5208/
+    * **Linkedin** https://www.linkedin.com/in/kenneth-igbo-b26bb5208/
     * **Email** Hadoken10@yahoo.com
     * **Twitter** https://twitter.com/KenRaiden7
 
-* **Kehinde Owolabi**
-    * **Github** https://github.com/owolabi250
-    * **Linkdin** https://www.linkedin.com/in/owolabi-kehinde-37b448151/
-    * **Email** owolabikehinde250@gmail.com
-    * **Twitter** https://twitter.com/Elder_Choco
-
-## Contributing
+## Contribute
 
 Like **DummyApi Builder**? Thanks!!!
 
 At the same time, we need your help
 
-### Finding Bugs
+## Finding Bugs
 
 DummyApi is just getting started. If you could help us find or fix potential bugs, we would be grateful!
 
 Have a bug or a feature request? [Please open a new issue](https://github.com/shady-cj/dummy_api_builder/issues)
 
-### New Features
+## New Features
 
 Have some awesome ideas? Feel free to open an issue or submit your pull request directly!
 
-### Documentation improvements.
+## Documentation improvements.
 
 Improvements to README and documentation are welcome at all times, whether typos or our lame English. 🤣.
 
