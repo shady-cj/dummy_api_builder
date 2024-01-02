@@ -80,36 +80,37 @@ def validate_entry_value_length(value, type, length):
     return True
 
 
-def validate_entry_constraints(value, tbl_p):
+def validate_entry_constraints(value, tbl_p, user=None):
     fk = None
+    consts = []
     for const in tbl_p.constraints:
-        const = const.name
-        if const.name == "nullable":
-            if not value:
-                return True, "nullable", None
-        if const.name == "foreign_key":
-            from models.table import Table
-            from models.api import Api
-            from models.tableparameter import TableParameter
-            from models.entrylist import EntryList
-            from models.relationship import Relationship
-            get_ref_field = tbl_p.foreign_key_reference_field
-            api, table = get_ref_field.split(".")
-            r_api = Api.query.filter_by(name=api).first()
-            if not r_api:
-                return False, "fk", "Api referenced by foreign key doesn't exist anymore"
-            r_table = Table.query.filter_by(name=table, api_id=r_api.id).first()
-            if not r_table:
-                return False, "fk", "Table referenced by foreign key doesn't exist anymore"
-            # r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
-            # if not r_field:
-            #     return False, "fk", "Field referenced by foreign key doesn't exist anymore"
-            e_li = EntryList.query.filter_by(table_id=r_table.id, primary_key_value = value).first()
-            if not e_li:
-                return False, "fk", "Primary key referenced for the foreign key doesn't exist"
-            fk = "fk"
-        if const.name == "unique":
-            from models.entry import Entry
-            if Entry.query.filter_by(tableparameter_id=tbl_p.id, value=value).first():
-                return False, "uniq", f"{value} already exists in the database. It must be unique"
+        consts.append(const.name.value)
+    if "nullable" in consts:
+        if not value:
+            return True, "nullable", None
+    if "foreign_key" in consts:
+        from models.table import Table
+        from models.api import Api
+        from models.tableparameter import TableParameter
+        from models.entrylist import EntryList
+        from models.relationship import Relationship
+        get_ref_field = tbl_p.foreign_key_reference_field
+        api, table = get_ref_field.split(".")
+        r_api = Api.query.filter_by(name=api, user_id=user.id).first()
+        if not r_api:
+            return False, "fk", "Api referenced by foreign key doesn't exist anymore"
+        r_table = Table.query.filter_by(name=table, api_id=r_api.id).first()
+        if not r_table:
+            return False, "fk", "Table referenced by foreign key doesn't exist anymore"
+        # r_field = TableParameter.query.filter_by(name=field, table_id=r_table.id).first()
+        # if not r_field:
+        #     return False, "fk", "Field referenced by foreign key doesn't exist anymore"
+        e_li = EntryList.query.filter_by(table_id=r_table.id, primary_key_value = value).first()
+        if not e_li:
+            return False, "fk", "Primary key referenced for the foreign key doesn't exist"
+        fk = "fk"
+    if "unique" in consts:
+        from models.entry import Entry
+        if Entry.query.filter_by(tableparameter_id=tbl_p.id, value=value).first():
+            return False, "uniq", f"{value} already exists in the database. It must be unique"
     return True, fk, None

@@ -59,7 +59,7 @@ def add_list_entry(api_token, api_name, model_name):
                 db.session.commit()
                 return jsonify({"error": f"such field name {entry_name} doesn't exist"}), 400
             rel_key = f"{tbl_p.foreign_key_reference_field}->{api.name}.{table.name}.{entry_name}" # incase of foreign key
-            stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p) # Validating the entry against the existing constraint
+            stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p, user) # Validating the entry against the existing constraint
             if const_type == "nullable" and stat:
                 continue
             if not stat and const_type == "uniq":
@@ -192,7 +192,7 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
             if not tbl_p:
                 continue
             rel_key = f"{tbl_p.foreign_key_reference_field}->{api.name}.{table.name}.{entry_name}" # incase of foreign key
-            stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p)
+            stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p, user)
             if const_type == "nullable" and stat:
                 continue
             if not stat and const_type == "uniq":
@@ -213,8 +213,17 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                 continue
             if tbl_p.primary_key:
                 primary_keys.append({"id": tbl_p.id, "value": entry_value})
-            e = Entry.query.filter_by(tableparameter_id=tbl_p.id, entry_list_id=e_list.id).first()
-            e.value = entry_value
+            e = Entry.query.filter_by(tableparameter_id=tbl_p.id, entry_list_id=e_list.id).first() # Grab the entry to be updated
+            if e:
+                # If the entry exists update the value
+                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = e.value, fk_model_name=f"{table.name.lower()}s").first() 
+                # remove the previous value from the relationship before updating it
+                if relationship:
+                    relationship.entrylists.remove(e_list)
+                e.value = entry_value 
+            else:
+                # in the event where there is no entry (as a result of previous nullable constraints)
+                e = Entry(value=entry_value, tableparameter_id=tbl_p.id, entry_list_id=e_list.id)
             if const_type == "fk":
                 relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = entry_value, fk_model_name=f"{table.name.lower()}s").first()
                 if relationship:
