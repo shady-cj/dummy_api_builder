@@ -25,8 +25,8 @@ def signup():
     user = User.query.filter_by(email = email).first()
     if user:
         return jsonify({"message": "Account already exists, please login" }), 202
-    hash_password = generate_password_hash(password)
-    api_token = f'{str(uuid.uuid4())}-{str(uuid.uuid4())}'
+    hash_password = generate_password_hash(password) # Hash password
+    api_token = f'{str(uuid.uuid4())}-{str(uuid.uuid4())}' # api_token = api key for the user
     user = User(email=email, password=hash_password, api_token=api_token)
     db.session.add(user)
     db.session.commit()

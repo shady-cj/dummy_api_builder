@@ -1,7 +1,6 @@
 """
 This module contains series
-of helper functions for the existing
-views.
+of validation check helper functions.
 """
 
 

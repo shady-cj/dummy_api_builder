@@ -62,9 +62,9 @@ def create_new_api(user):
     name = data.get('name')
     description = data.get('description')
     if not name:
-        return jsonify({"error": "name of the api must be provided"})
+        return jsonify({"error": "name of the api must be provided"}), 400
     if Api.query.filter_by(name=name, user_id = user.id).first():
-        return jsonify({"error": "name with api already exists for this user"})
+        return jsonify({"error": "name with api already exists for this user"}), 400
     if not validate_name(name):
         return jsonify({"error": "Api name must be a valid python identifier, not a keyword and must be atleast 3 letters"}), 400
     new_api = Api(name=name, description=description, user_id=user.id)
@@ -84,6 +84,7 @@ def update_api_info(user, id):
     if not api:
         return jsonify({"error": f"api with id {id} doesn't exist"}), 400
     if api.tables:
+        # If api already has tables/models in them you can't update.
         return jsonify({"error": "You cannot update an api with tables"}), 400
     if name and validate_name(name):
         api.name = name

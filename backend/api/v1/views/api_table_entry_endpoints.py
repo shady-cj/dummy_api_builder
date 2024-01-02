@@ -31,14 +31,24 @@ def add_list_entry(api_token, api_name, model_name):
         return make_response(f"model {model_name} doesn't exist in the api", 400)
     if request.method == "POST":
         data = request.get_json()
-        entries = data.get("entries") or []
-        if type(entries) != list or len(entries) != len(table.table_parameters):
+        entries = data.get("entries") or [] 
+        if type(entries) != list or len(entries) != len(table.table_parameters): 
             return jsonify({"error": "Incomplete fields for the model and entries must be a list"}), 400
         e_list = EntryList(table_id = table.id)
         db.session.add(e_list)
         db.session.commit()
         checkpoint = db.session.begin_nested()
-        primary_keys = []
+        primary_keys = [] # You can have multiple primary keys on a table
+
+        """
+        entries format 
+        [
+        {
+        "name": "Name",
+        "value": "Peter"
+        }, ...
+        ]
+        """
         for entry in entries:
             entry_name = entry.get("name")
             entry_value = entry.get("value")
@@ -49,7 +59,7 @@ def add_list_entry(api_token, api_name, model_name):
                 db.session.commit()
                 return jsonify({"error": f"such field name {entry_name} doesn't exist"}), 400
             rel_key = f"{tbl_p.foreign_key_reference_field}->{api.name}.{table.name}.{entry_name}" # incase of foreign key
-            stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p)
+            stat, const_type, err_msg = validate_entry_constraints(entry_value, tbl_p) # Validating the entry against the existing constraint
             if const_type == "nullable" and stat:
                 continue
             if not stat and const_type == "uniq":
@@ -70,7 +80,7 @@ def add_list_entry(api_token, api_name, model_name):
                         Relationship.query.filter_by(fk_rel=rel_key, entry_ref_pk=entry_value).delete()  # Then delete the relationship
                 db.session.commit()
                 return jsonify({"error": err_msg}), 400
-            if not validate_entry_value(entry_value, tbl_p.data_type.name):
+            if not const_type == "fk" and not validate_entry_value(entry_value, tbl_p.data_type.name):
                 checkpoint.rollback()
                 EntryList.query.filter_by(id=e_list.id).delete()
                 db.session.commit()
@@ -100,6 +110,9 @@ def add_list_entry(api_token, api_name, model_name):
             db.session.add(e)
         if not primary_keys:
             return jsonify({"error", "No primary key value"}),400
+        
+
+        # Merge all the primary keys to form the main primary key for the field.
         primary_keys_sorted = sorted(primary_keys, key=lambda x: x["id"])
         primary_key_value = "".join([ str(key["value"]) for key in primary_keys_sorted])
         # check if primary key already exists
@@ -194,7 +207,7 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                         Relationship.query.filter_by(fk_rel=rel_key, entry_ref_pk=entry_value).delete()  # Then delete the relationship
                 db.session.commit()
                 continue
-            if not validate_entry_value(entry_value, tbl_p.data_type.name):
+            if not const_type == "fk" and not validate_entry_value(entry_value, tbl_p.data_type.name):
                 continue
             if not validate_entry_value_length(entry_value, tbl_p.data_type.name, tbl_p.dataType_length):
                 continue

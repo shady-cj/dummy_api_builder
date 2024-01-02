@@ -1,6 +1,12 @@
 """
-Defining models to hold parameters for each
+Defining model to hold fields for each
 tables
+
+This allows the user to define something like this
+
+Name = db.Column(db.String)
+Age = db.Column(db.Integer)
+_Id = db.Column(db.Integer, primary_key=True)
 """
 from . import db
 import enum
@@ -35,3 +41,6 @@ class TableParameter(db.Model):
     table = db.relationship('Table', back_populates='table_parameters')
     constraints = db.relationship('Constraint', secondary=parameter_constraints, backref='table_parameters', cascade="all, delete")
     entries = db.relationship('Entry', back_populates='tableparameter', cascade="all, delete")
+
+
+    # Add default values
