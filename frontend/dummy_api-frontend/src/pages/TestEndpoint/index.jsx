@@ -1,26 +1,52 @@
 import "./index.scss"
-import { useState } from "react"
-import { hostUrl } from "../../variables";
+import { useState, useContext } from "react"
+import { endpointPrefix } from "../../variables";
+import { AppContext } from "../../context";
+
+// hostUrl / api / v1 / <your_api_Id>/my_api/<Api_name>/model/<Model_name>/<optional:model_id></optional:model_id>
 
 const Index = () => {
-    const [endpointParam, setEndpointParam] = useState({ "url": "", "method": "GET", "data": "" });
+    const [endpointParam, setEndpointParam] = useState({ "method": "GET", "data": "", "api": "", "model": "", "model_id": "" });
     const [response, setResponse] = useState(null)
+    const { user } = useContext(AppContext)
+
+    const copyTextToClipboard = async (text) => {
+        if ('clipboard' in navigator) {
+            return await navigator.clipboard.writeText(text);
+        } else {
+            return document.execCommand('copy', true, text);
+        }
+    }
+
+    const copyEndpoint = (e) => {
+        if (!endpointParam.api || !endpointParam.model) {
+            alert("Fill in the api name and the model name")
+            return
+        }
+        const fullUrlPath = `${endpointPrefix}${user.api_token}/my_api/${endpointParam.api}/model/${endpointParam.model}/${endpointParam.model_id}`
+        copyTextToClipboard(fullUrlPath)
+        e.target.textContent = "copied"
+        setTimeout(() => {
+            e.target.textContent = "here"
+        }, 3000)
+    }
 
     const handleChange = (e) => {
-        setEndpointParam(prev => ({ ...prev, [e.target.name]: e.target.value.trim() }))
+        setEndpointParam(prev => ({ ...prev, [e.target.name]: e.target.name === "data" ? e.target.value : e.target.value.trim() }))
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         setResponse(null)
-        if (!endpointParam.url) {
+        if (!endpointParam.api || !endpointParam.model) {
             return;
         }
+        const fullUrlPath = `${endpointPrefix}${user.api_token}/my_api/${endpointParam.api}/model/${endpointParam.model}/${endpointParam.model_id}`
         if (["POST", "PUT"].includes(endpointParam.method)) {
             if (!endpointParam.data) return;
             try {
-                const data = eval(endpointParam.data)
-                const resp = await fetch(endpointParam.url, {
+                const data = eval(endpointParam.data.trim())
+                const resp = await fetch(fullUrlPath, {
                     method: endpointParam.method,
                     headers: {
                         "Content-Type": "application/json"
@@ -38,7 +64,7 @@ const Index = () => {
 
         }
         else {
-            const resp = await fetch(endpointParam.url, {
+            const resp = await fetch(fullUrlPath, {
                 method: endpointParam.method
             })
             if (resp.status == 204) {
@@ -57,20 +83,29 @@ const Index = () => {
             <h2>Test Your API</h2>
             <section className="endpoint_info">
                 <p>
-                    Copy your api id from you user profile at the top right corner. (in the dropdown click on the &lsquo;copy&rsquo;  button next to &lsquo;Api id&rsquo;)
+                    Fill in the API name and MODEL name you want query below and copy your full path <a onClick={copyEndpoint}>here</a>
                 </p>
                 <p>
-                    Format: <b>{"hostUrl/api/v1/<your_api_Id>/my_api/<Api_name>/model/<Model_name>/<optional: model_id>"}</b>
+                    Format: <b>{"<your_api_Id>/my_api/<Api_name>/model/<Model_name>/<optional: model_id>"}</b>
 
                 </p>
-                <small>Note: Do not share this id. refer to the <a href="https://github.com/shady-cj/dummy_api_builder/blob/main/README.md" target="_blank" rel="noreferrer">docs</a> for more info</small>
+                <small>Refer to the <a href="https://github.com/shady-cj/dummy_api_builder/blob/main/README.md" target="_blank" rel="noreferrer">docs</a> for more info</small>
             </section>
             <section className="endpoint_form">
                 <form action="" onSubmit={handleSubmit}>
                     <div>
-                        <label htmlFor="url">Endpoint</label>
-                        <input type="text" onChange={handleChange} id="url" name="url" value={endpointParam.url} placeholder={`${hostUrl}/api/v1/<your_api_Id>/my_api/<Api_name>/model/<Model_name>/{model_id}`} />
+                        <label htmlFor="url">Api</label>
+                        <input type="text" onChange={handleChange} id="api" name="api" value={endpointParam.api} placeholder={`<Api_name>`} />
                     </div>
+                    <div>
+                        <label htmlFor="url">Model</label>
+                        <input type="text" onChange={handleChange} id="model" name="model" value={endpointParam.model} placeholder={`<Model_name>`} />
+                    </div>
+                    <div>
+                        <label htmlFor="url">Query ID</label>
+                        <input type="text" onChange={handleChange} id="model_id" name="model_id" value={endpointParam.model_id} placeholder={`<Optional: Model_ID>`} />
+                    </div>
+
                     <div>
                         <label htmlFor="method">Method</label>
                         <select name="method" id="method" onChange={handleChange} value={endpointParam.method}>
