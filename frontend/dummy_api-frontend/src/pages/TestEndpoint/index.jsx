@@ -6,7 +6,7 @@ import { AppContext } from "../../context";
 // hostUrl / api / v1 / <your_api_Id>/my_api/<Api_name>/model/<Model_name>/<optional:model_id></optional:model_id>
 
 const Index = () => {
-    const [endpointParam, setEndpointParam] = useState({ "method": "GET", "data": "", "api": "", "model": "", "model_id": "" });
+    const [endpointParam, setEndpointParam] = useState({ "method": "GET", "data": "", "api": "", "model": "", "model_id": "", "query_params": "" });
     const [response, setResponse] = useState(null)
     const { user } = useContext(AppContext)
 
@@ -23,7 +23,8 @@ const Index = () => {
             alert("Fill in the api name and the model name")
             return
         }
-        const fullUrlPath = `${endpointPrefix}${user.api_token}/my_api/${endpointParam.api}/model/${endpointParam.model}/${endpointParam.model_id}`
+        let fullUrlPath = `${endpointPrefix}${user.api_token}/my_api/${endpointParam.api}/model/${endpointParam.model}/${endpointParam.model_id}`
+        if (endpointParam.query_params) fullUrlPath = `${fullUrlPath}?${endpointParam.query_params}`
         copyTextToClipboard(fullUrlPath)
         e.target.textContent = "copied"
         setTimeout(() => {
@@ -41,11 +42,14 @@ const Index = () => {
         if (!endpointParam.api || !endpointParam.model) {
             return;
         }
-        const fullUrlPath = `${endpointPrefix}${user.api_token}/my_api/${endpointParam.api}/model/${endpointParam.model}/${endpointParam.model_id}`
+        let fullUrlPath = `${endpointPrefix}${user.api_token}/my_api/${endpointParam.api}/model/${endpointParam.model}/${endpointParam.model_id}`
         if (["POST", "PUT"].includes(endpointParam.method)) {
+
             if (!endpointParam.data) return;
             try {
-                const data = eval(endpointParam.data.trim())
+
+                const data = JSON.parse(endpointParam.data.trim())
+
                 const resp = await fetch(fullUrlPath, {
                     method: endpointParam.method,
                     headers: {
@@ -64,6 +68,7 @@ const Index = () => {
 
         }
         else {
+            if (endpointParam.query_params) fullUrlPath = `${fullUrlPath}?${endpointParam.query_params}`
             const resp = await fetch(fullUrlPath, {
                 method: endpointParam.method
             })
@@ -104,6 +109,10 @@ const Index = () => {
                     <div>
                         <label htmlFor="url">Query ID</label>
                         <input type="text" onChange={handleChange} id="model_id" name="model_id" value={endpointParam.model_id} placeholder={`<Optional: Model_ID>`} />
+                    </div>
+                    <div>
+                        <label htmlFor="url">Query Params</label>
+                        <input type="text" onChange={handleChange} id="query_params" name="query_params" value={endpointParam.query_params} placeholder={`<Optional: Query_Params>`} />
                     </div>
 
                     <div>
