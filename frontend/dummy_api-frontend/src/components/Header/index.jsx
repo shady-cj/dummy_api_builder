@@ -3,7 +3,8 @@ import desktop_logo from "../../assets/icon_lite_desktop.svg"
 import { Link, useNavigate } from "react-router-dom"
 import avatar from "../../assets/avatar.svg"
 import caretDown from "../../assets/caret-white.svg"
-import { useContext, useEffect, useState } from 'react'
+import caretUp from "../../assets/caret-up-white.svg"
+import { useContext, useState } from 'react'
 import { AppContext } from '../../context'
 import Cookies from 'js-cookie'
 const Index = ({ navs, activeNav, type }) => {
@@ -36,7 +37,7 @@ const Index = ({ navs, activeNav, type }) => {
                     {
                         type == "apis" && <li>
                             <img src={avatar} alt="" />
-                            <img src={caretDown} alt="" onClick={() => setOpenUserInfo(prev => !prev)} />
+                            <img src={openUserInfo ? caretUp : caretDown} alt="" onClick={() => setOpenUserInfo(prev => !prev)} />
                             {
                                 openUserInfo && <div>
                                     <h3>{user?.email}</h3>

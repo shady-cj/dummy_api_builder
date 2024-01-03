@@ -8,7 +8,7 @@ const AppProvider = ({ children }) => {
     const [user, setUser] = React.useState(null)
     const [apis, setApis] = React.useState(null)
     const [model, setModel] = React.useState(null)
-    const [loading, setLoading] = React.useState(false)
+    const [loading, setLoading] = React.useState(true)
     const [apiLoading, setApiLoading] = React.useState(false)
     const [userLoading, setUserLoading] = React.useState(false)
     const [invalidate, setInvalidate] = React.useState(false)
