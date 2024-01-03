@@ -31,9 +31,20 @@ def add_list_entry(api_token, api_name, model_name):
         return make_response(f"model {model_name} doesn't exist in the api", 400)
     if request.method == "POST":
         data = request.get_json()
-        entries = data.get("entries") or [] 
-        if type(entries) != list or len(entries) != len(table.table_parameters): 
-            return jsonify({"error": "Incomplete fields for the model and entries must be a list"}), 400
+        entries = data.get("entries") or {}
+        if type(entries) != dict: 
+            return jsonify({"error": "Entries must be an object"}), 400
+        # This logic would be refactored. 
+        required_parameters = 0
+        for table_parameter in table.table_parameters:
+            current_constraint = [c.name.value for c in table_parameter.constraints]
+            if "nullable" in current_constraint:
+                continue
+            required_parameters += 1
+        # The check is done to ensure the user is passing all required fields and no none declared field is passed
+        # The current check just compares the length, more validation is done later on below
+        if len(entries) < required_parameters or len(entries) > len(table.table_parameters):
+            return jsonify({"error": "Incomplete field or a non declared field has been passed"}), 400
         e_list = EntryList(table_id = table.id)
         db.session.add(e_list)
         db.session.commit()
@@ -49,9 +60,7 @@ def add_list_entry(api_token, api_name, model_name):
         }, ...
         ]
         """
-        for entry in entries:
-            entry_name = entry.get("name")
-            entry_value = entry.get("value")
+        for entry_name, entry_value in entries.items():
             tbl_p = TableParameter.query.filter_by(name=entry_name, table_id=table.id).first()
             if not tbl_p:
                 checkpoint.rollback()
@@ -179,15 +188,15 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
             return jsonify({"error": "primary key value doesn't match any"}), 400
     if request.method == "PUT":
         data = request.get_json()
-        entries = data.get("entries") or []
+        entries = data.get("entries") or {}
         # if type(entries) != list or len(entries) != len(table.table_parameters):
         #     return jsonify({"error": "Incomplete fields for the model and entries must be a list"}), 400
         # for e  in Entry.query.filter_by(entry_list_id=e_list.id).all()
+        if type(entries) != dict:
+            return jsonify({"error": "Entries must be an object"})
         checkpoint = db.session.begin_nested()
         primary_keys = []
-        for entry in entries:
-            entry_name = entry.get("name")
-            entry_value = entry.get("value")
+        for entry_name, entry_value in entries.items():
             tbl_p = TableParameter.query.filter_by(name=entry_name, table_id=table.id).first()
             if not tbl_p:
                 continue

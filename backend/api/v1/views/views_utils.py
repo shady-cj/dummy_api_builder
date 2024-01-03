@@ -82,9 +82,7 @@ def validate_entry_value_length(value, type, length):
 
 def validate_entry_constraints(value, tbl_p, user=None):
     fk = None
-    consts = []
-    for const in tbl_p.constraints:
-        consts.append(const.name.value)
+    consts = [const.name.value for const in tbl_p.constraints]
     if "nullable" in consts:
         if not value:
             return True, "nullable", None
