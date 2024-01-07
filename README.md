@@ -48,7 +48,7 @@
     - [Creating an API](#creating-an-api)
     - [Adding a Model to the API](#adding-a-model-to-the-api)
     - [Updating api and models](#updating-api-and-models)
-
+    - [Deleting api and models](#deleting-api-and-models)
 ## Overview
 ### Easily Create API
 With our powerful web application, you'll effortlessly create APIs in no time, empowering you to perform essential CRUD operations (Create, Retrieve, Update, Delete) on your data.
@@ -145,7 +145,7 @@ To create a model field, you can just click on the `Add Field` button, the neces
     - The name of the model field(e.g _id, name, email).
     - Must be a valid python identifier
     - Must be atleast 3 characters or more.
-    - if you need have an `id` use `_id` instead.
+    - if you need to have an `id` use `_id` instead.
     - Mustn't be a python keyword
 - **Max Length**:
     - Field is optional
@@ -163,7 +163,7 @@ To create a model field, you can just click on the `Add Field` button, the neces
     - More than one constraints can be selected
     - Primary Key: 
         - There must be atleast a field with this option selected (The model won't be created if not)
-        - There can be more tha one primary key for a model. (The behavior is it concatenates the fields together in the other they were marked primary keys, e.g _id+email="1example@gmail.com").
+        - There can be more than one primary key for a model. (The behavior is it concatenates the fields together in the other they were marked primary keys, e.g _id+email="1example@gmail.com").
     - Foreign Key:
         - if this model field is tagged as a foreign key then it's mandatory to fill up the `Foreign Key Reference Table`
         - Creates a relationship with another table, which can be in another api. 
@@ -174,15 +174,28 @@ To create a model field, you can just click on the `Add Field` button, the neces
 - **Foreign Key Reference Table**:
     - Field is optional, mandatory if the model field has a `Foreign Key` constraints.
     - Uses the `api.table` format
-    - `api` refers to the api to create the relationship with, The api must be an existing api
-    - `table` refers to the model/table to create the relationship with, The table must be an existing table 
+    - `api` refers to the api to create the relationship with, The api must be an existing api created by the user
+        - `api` can be the api in which the current model resides or any other api owned by the user on the application.
+    - `table` refers to the model/table to create the relationship with, The table must be an existing table
+        - Remember `table` you use must be present on the `api` referenced.
 
 **Date & Datetime** are validated through dateutil.parser so any valid `strftime()`(for python) formatted date and datetime would be work. (Basically just use a valid date format and it works).
 
 ### Updating api and models
 - An Api cannot be updated if it already has models associated to it.
 - A model cannot be updated if it already has entries/data in it.
-- A model field constraints cannot be removed, it can only be appended to. 
+- A model field constraints cannot be removed, it can only be appended to. (This would be improved in further versions)
+
+### Deleting api and models
+- You can delete apis and models if not needed anymore
+- If you delete an api all the models associated would be automatically deleted
+- Remember when deleting an api or model that is a foreign key of another model you won't be able to access the foreign key anymore
+    - Regarding this feature there would be improvement in the future versions where there would be an `on-delete` feature on the model that would define the behavior when a foreign key is deleted.
+    - The current behavior of this is that models that there would be 2 scenarios (already created, being created)
+        - If a model is referencing the deleted model and already has fields that it is pointing to e.g in a blog api you have a reference to the user model `{Author: '1'...}` if you delete the user model the Author field would retain its values and not set to null (This would be improved in future versions) you would have to manually set this.
+        - If a model is being created and the foreign key is still pointing to an already deleted model, it won't be created it would throw an error and prevent the entry from being created, the work around to this is to add the `nullable` constraints to the foreign key field if you have no intention of using it anymore(as there is no feature to delete fields yet) or you can update the **Foreign Key Reference Table** to point to another `api.table` and then go ahead to update
+
+    - **Note** You can only set a foreign key field to `null` only if there is a `nullable` constraints set.
 
 
 
