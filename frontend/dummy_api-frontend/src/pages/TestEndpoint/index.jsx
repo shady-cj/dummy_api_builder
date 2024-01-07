@@ -112,7 +112,7 @@ const Index = () => {
                     </div>
                     <div>
                         <label htmlFor="url">Query Params</label>
-                        <input type="text" onChange={handleChange} id="query_params" name="query_params" value={endpointParam.query_params} placeholder={`<Optional: Query_Params>`} />
+                        <input type="text" onChange={handleChange} id="query_params" name="query_params" value={endpointParam.query_params} placeholder={`<field_name>=<value>`} />
                     </div>
 
                     <div>

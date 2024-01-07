@@ -49,6 +49,7 @@
     - [Adding a Model to the API](#adding-a-model-to-the-api)
     - [Updating api and models](#updating-api-and-models)
     - [Deleting api and models](#deleting-api-and-models)
+- [Testing your endpoint](#testing-your-endpoint)
 ## Overview
 ### Easily Create API
 With our powerful web application, you'll effortlessly create APIs in no time, empowering you to perform essential CRUD operations (Create, Retrieve, Update, Delete) on your data.
@@ -112,6 +113,20 @@ SECRET=<random_value>
   in `backend/api/v1/app.py`
 
 ## Using the application
+After you create an account and logged yourself in, you might be confused as to how to use this application:
+Here is a simple breakdown of what the features are meant for
+
+- `Api`: 
+    Just see an api like an application, for instance you want to create a simple recipe app, it is only intuitive to create an api to house this application, but sometimes you might have a complex project that would use multiple sub-apps, for instance your recipe application could have a sub app like Authentication where you need to take care of user information and restrictions as to who can/cannot use the recipe, within the authentication app you can create roles, groups etc... The Authentication app can then now be used with your recipe app, alongside probably Cuisine app to form a larger **Restaurant Project**. So `api` basically gives you the ability to segregate your projects into different applications and they get to communicate with each other.
+
+- `Model`:
+    Within each application talked about above you need to have table to house each functionality, see a`model` like a database table,Within a `Recipe` the table could be like `ingredient`, `User`(which can reference the Authentication api) etc..
+
+- `Field`: 
+    Within each model you need to define fields to house specific information about the model, if a `Model` is a database table then a `Field` refers to each field defined on the database table. an example of the field could be be (From a User table) `first_name`,`last_name`, `age`, etc... 
+
+- `Constraints`: 
+    These a characteristics that a particular field should have, for example a `unique` constraint means when entries are being created on the model there can be only one value across the same fields in the model.
 
 ### Creating an API
 Go ahead and create an account and login.![daB - Google Chrome 6_26_2023 12_41_21 PM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/61b3b107-578a-4861-8bff-2dbefaf73ac5)
@@ -196,6 +211,33 @@ To create a model field, you can just click on the `Add Field` button, the neces
         - If a model is being created and the foreign key is still pointing to an already deleted model, it won't be created it would throw an error and prevent the entry from being created, the work around to this is to add the `nullable` constraints to the foreign key field if you have no intention of using it anymore(as there is no feature to delete fields yet) or you can update the **Foreign Key Reference Table** to point to another `api.table` and then go ahead to update
 
     - **Note** You can only set a foreign key field to `null` only if there is a `nullable` constraints set(you can always update the field to append the nullable constraints).
+
+## Testing your endpoint
+This is the most important of the application, being able to use the api that has been created for you.
+
+To navigate to test your endpoint. 
+- Click on the Test Enpoint on your api detail page(where it lists your models).
+<!-- <Add image> -->
+- On this page you have some descriptive information about the endpoint pattern.
+-  Typical endpoint: `your_api_Id`/my_api/`Api_name`/model/`Model_name`/`optional: model_id`
+    - `your_api_Id`: is uuid unique to every user you can get it at the top right corner where the user icon is.
+    - `Api_name`: is the api name you want to query `Blog`, `User admin`, `Recipe`.
+    - `Model_name`: is the name of the model with the api
+    - `model_id`: is used for getting a detail information or updating the model of that `id`
+- Fields
+    - `Api`: Api name
+    - `Model`: Model name
+    - `Query ID`: id for case of detail information/update
+    - `Query Params`: is useful for filtering a list of data based on a specific field, how it's used is `<name_of_field>=<value>`
+    - `Method`: mode of request (`PUT` is for updating)
+    - `Data`: is refers to data incase of creating(`POST`) and updating(`PUT`)
+
+Each full url would be generated after filling the required field to copy the full url for your application click on the `here` button as shown below
+
+
+
+
+
 
 
 
