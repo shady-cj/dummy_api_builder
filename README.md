@@ -195,7 +195,7 @@ To create a model field, you can just click on the `Add Field` button, the neces
         - If a model is referencing the deleted model and already has fields that it is pointing to e.g in a blog api you have a reference to the user model `{Author: '1'...}` if you delete the user model the Author field would retain its values and not set to null (This would be improved in future versions) you would have to manually set this.
         - If a model is being created and the foreign key is still pointing to an already deleted model, it won't be created it would throw an error and prevent the entry from being created, the work around to this is to add the `nullable` constraints to the foreign key field if you have no intention of using it anymore(as there is no feature to delete fields yet) or you can update the **Foreign Key Reference Table** to point to another `api.table` and then go ahead to update
 
-    - **Note** You can only set a foreign key field to `null` only if there is a `nullable` constraints set.
+    - **Note** You can only set a foreign key field to `null` only if there is a `nullable` constraints set(you can always update the field to append the nullable constraints).
 
 
 
