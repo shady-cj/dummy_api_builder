@@ -217,7 +217,12 @@ This is the most important of the application, being able to use the api that ha
 
 To navigate to test your endpoint. 
 - Click on the Test Enpoint on your api detail page(where it lists your models).
-<!-- <Add image> -->
+![daB - Google Chrome 1_7_2024 2_19_08 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/1f6ae96a-e0e1-48e5-aaf9-b7a84996a3a6)
+![daB - Google Chrome 1_7_2024 2_18_33 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/9698d4af-4414-4c6d-bb9a-06fcd5c17b97)
+![daB - Google Chrome 1_7_2024 2_18_23 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/33263f09-0daa-40cf-9411-cde7c6aa8db8)
+![daB - Google Chrome 1_7_2024 2_19_30 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/6883907a-7946-4b91-b615-862c8508c8b8)
+
+
 - On this page you have some descriptive information about the endpoint pattern.
 -  Typical endpoint: `your_api_Id`/my_api/`Api_name`/model/`Model_name`/`optional: model_id`
     - `your_api_Id`: is uuid unique to every user you can get it at the top right corner where the user icon is.
@@ -233,6 +238,7 @@ To navigate to test your endpoint.
     - `Data`: is refers to data incase of creating(`POST`) and updating(`PUT`)
 
 Each full url would be generated after filling the required field to copy the full url for your application click on the `here` button as shown below
+![daB - Google Chrome 1_7_2024 2_18_23 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/a0785efd-58e1-414d-8cd1-3586fc958c49)
 
 
 
