@@ -218,7 +218,6 @@ This is the most important of the application, being able to use the api that ha
 To navigate to test your endpoint. 
 - Click on the Test Enpoint on your api detail page(where it lists your models).
 ![daB - Google Chrome 1_7_2024 2_19_08 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/1f6ae96a-e0e1-48e5-aaf9-b7a84996a3a6)
-![daB - Google Chrome 1_7_2024 2_18_23 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/33263f09-0daa-40cf-9411-cde7c6aa8db8)
 ![daB - Google Chrome 1_7_2024 2_19_30 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/6883907a-7946-4b91-b615-862c8508c8b8)
 
 
