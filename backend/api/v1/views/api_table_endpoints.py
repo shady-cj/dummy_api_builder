@@ -202,13 +202,14 @@ def update_model(user, api_id, model_name):
     description = data.get('description')
     table_parameters = data.get('tbl_params') or []
     api = Api.query.filter_by(id=api_id, user_id=user.id).first()
+    entry_present = False
     if not api:
         return jsonify({"error": "no api of such is associated to the user"}), 400
     get_table = Table.query.filter_by(name=model_name, api_id=api_id).first()
     if not get_table:
         return jsonify({"error": "Table doesn't exist"}), 400
     if get_table.entry_lists:
-        return jsonify({"error": "You cannot update the table when it already has data"}), 400
+        entry_present = True
     if type(table_parameters) != list:
         return jsonify({"error": "table_parameter must be a list"}), 400
     if name and validate_name(name):
@@ -220,18 +221,38 @@ def update_model(user, api_id, model_name):
         param_dt = param.get("datatype")
         param_dt_length = param.get("dt_length")
         constraints = param.get("constraints") or []
+
+
         if not param_name:
             continue
         try:
+            # There is a bug here. grab the TableParameter using an id 
             p = TableParameter.query.filter_by(name=param_name, table_id=get_table.id).first()  
+            
             if not p:
+                """
+                in the next version you should be able to add more fields to a model if data already exists
+                but would require a default value to prepopulate previously created module.
+                """
+                if entry_present:
+                    return jsonify({"error": "You cannot edit or add new field to the model when it already has data"}), 400
                 if validate_name(param_name) and param_dt and validate_dtType(param_dt):
                     p = TableParameter(name=param_name, table_id=get_table.id, data_type=param_dt)
                 else:
                     continue
-            else:        
-                if validate_name(param_name):
-                    p.name = param_name
+            else:
+                if entry_present:
+                    if "nullable" in constraints:
+                        if "primary_key" in [con.name.value for con in p.constraints]:
+                            continue
+                        get_c = Constraint.query.filter_by(name="nullable").first()
+                        if get_c:
+                            p.constraints.append(get_c)
+                        else:
+                            p.constraints.append(Constraint(name="nullable"))
+                    continue
+                # if validate_name(param_name):
+                #     p.name = param_name
                 if param_dt:
                     if validate_dtType(param_dt):
                         p.data_type = param_dt
