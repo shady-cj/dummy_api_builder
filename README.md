@@ -48,7 +48,8 @@
     - [Creating an API](#creating-an-api)
     - [Adding a Model to the API](#adding-a-model-to-the-api)
     - [Updating api and models](#updating-api-and-models)
-
+    - [Deleting api and models](#deleting-api-and-models)
+- [Testing your endpoint](#testing-your-endpoint)
 ## Overview
 ### Easily Create API
 With our powerful web application, you'll effortlessly create APIs in no time, empowering you to perform essential CRUD operations (Create, Retrieve, Update, Delete) on your data.
@@ -112,6 +113,20 @@ SECRET=<random_value>
   in `backend/api/v1/app.py`
 
 ## Using the application
+After you create an account and logged yourself in, you might be confused as to how to use this application:
+Here is a simple breakdown of what the features are meant for
+
+- `Api`: 
+    Just see an api like an application, for instance you want to create a simple recipe app, it is only intuitive to create an api to house this application, but sometimes you might have a complex project that would use multiple sub-apps, for instance your recipe application could have a sub app like Authentication where you need to take care of user information and restrictions as to who can/cannot use the recipe, within the authentication app you can create roles, groups etc... The Authentication app can then now be used with your recipe app, alongside probably Cuisine app to form a larger **Restaurant Project**. So `api` basically gives you the ability to segregate your projects into different applications and they get to communicate with each other.
+
+- `Model`:
+    Within each application talked about above you need to have table to house each functionality, see a`model` like a database table,Within a `Recipe` the table could be like `ingredient`, `User`(which can reference the Authentication api) etc..
+
+- `Field`: 
+    Within each model you need to define fields to house specific information about the model, if a `Model` is a database table then a `Field` refers to each field defined on the database table. an example of the field could be be (From a User table) `first_name`,`last_name`, `age`, etc... 
+
+- `Constraints`: 
+    These a characteristics that a particular field should have, for example a `unique` constraint means when entries are being created on the model there can be only one value across the same fields in the model.
 
 ### Creating an API
 Go ahead and create an account and login.![daB - Google Chrome 6_26_2023 12_41_21 PM (2)](https://github.com/shady-cj/dummy_api_builder/assets/66220414/61b3b107-578a-4861-8bff-2dbefaf73ac5)
@@ -145,7 +160,7 @@ To create a model field, you can just click on the `Add Field` button, the neces
     - The name of the model field(e.g _id, name, email).
     - Must be a valid python identifier
     - Must be atleast 3 characters or more.
-    - if you need have an `id` use `_id` instead.
+    - if you need to have an `id` use `_id` instead.
     - Mustn't be a python keyword
 - **Max Length**:
     - Field is optional
@@ -163,7 +178,7 @@ To create a model field, you can just click on the `Add Field` button, the neces
     - More than one constraints can be selected
     - Primary Key: 
         - There must be atleast a field with this option selected (The model won't be created if not)
-        - There can be more tha one primary key for a model. (The behavior is it concatenates the fields together in the other they were marked primary keys, e.g _id+email="1example@gmail.com").
+        - There can be more than one primary key for a model. (The behavior is it concatenates the fields together in the other they were marked primary keys, e.g _id+email="1example@gmail.com").
     - Foreign Key:
         - if this model field is tagged as a foreign key then it's mandatory to fill up the `Foreign Key Reference Table`
         - Creates a relationship with another table, which can be in another api. 
@@ -174,15 +189,59 @@ To create a model field, you can just click on the `Add Field` button, the neces
 - **Foreign Key Reference Table**:
     - Field is optional, mandatory if the model field has a `Foreign Key` constraints.
     - Uses the `api.table` format
-    - `api` refers to the api to create the relationship with, The api must be an existing api
-    - `table` refers to the model/table to create the relationship with, The table must be an existing table 
+    - `api` refers to the api to create the relationship with, The api must be an existing api created by the user
+        - `api` can be the api in which the current model resides or any other api owned by the user on the application.
+    - `table` refers to the model/table to create the relationship with, The table must be an existing table
+        - Remember `table` you use must be present on the `api` referenced.
 
 **Date & Datetime** are validated through dateutil.parser so any valid `strftime()`(for python) formatted date and datetime would be work. (Basically just use a valid date format and it works).
 
 ### Updating api and models
 - An Api cannot be updated if it already has models associated to it.
 - A model cannot be updated if it already has entries/data in it.
-- A model field constraints cannot be removed, it can only be appended to. 
+- A model field constraints cannot be removed, it can only be appended to. (This would be improved in further versions)
+
+### Deleting api and models
+- You can delete apis and models if not needed anymore
+- If you delete an api all the models associated would be automatically deleted
+- Remember when deleting an api or model that is a foreign key of another model you won't be able to access the foreign key anymore
+    - Regarding this feature there would be improvement in the future versions where there would be an `on-delete` feature on the model that would define the behavior when a foreign key is deleted.
+    - The current behavior of this is that models that there would be 2 scenarios (already created, being created)
+        - If a model is referencing the deleted model and already has fields that it is pointing to e.g in a blog api you have a reference to the user model `{Author: '1'...}` if you delete the user model the Author field would retain its values and not set to null (This would be improved in future versions) you would have to manually set this.
+        - If a model is being created and the foreign key is still pointing to an already deleted model, it won't be created it would throw an error and prevent the entry from being created, the work around to this is to add the `nullable` constraints to the foreign key field (For now this is the only solution as you won't be allowed to update other properties when you already have entries in the table)
+
+    - **Note** You can only set a foreign key field to `null` only if there is a `nullable` constraints set(you can always update the field to append the nullable constraints).
+
+## Testing your endpoint
+This is the most important of the application, being able to use the api that has been created for you.
+
+To navigate to test your endpoint. 
+- Click on the Test Enpoint on your api detail page(where it lists your models).
+![daB - Google Chrome 1_7_2024 2_19_08 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/1f6ae96a-e0e1-48e5-aaf9-b7a84996a3a6)
+![daB - Google Chrome 1_7_2024 2_19_30 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/6883907a-7946-4b91-b615-862c8508c8b8)
+
+
+- On this page you have some descriptive information about the endpoint pattern.
+-  Typical endpoint: `your_api_Id`/my_api/`Api_name`/model/`Model_name`/`optional: model_id`
+    - `your_api_Id`: is uuid unique to every user you can get it at the top right corner where the user icon is.
+    - `Api_name`: is the api name you want to query `Blog`, `User admin`, `Recipe`.
+    - `Model_name`: is the name of the model with the api
+    - `model_id`: is used for getting a detail information or updating the model of that `id`
+- Fields
+    - `Api`: Api name
+    - `Model`: Model name
+    - `Query ID`: id for case of detail information/update
+    - `Query Params`: is useful for filtering a list of data based on a specific field, how it's used is `<name_of_field>=<value>`
+    - `Method`: mode of request (`PUT` is for updating)
+    - `Data`: is refers to data incase of creating(`POST`) and updating(`PUT`)
+
+Each full url would be generated after filling the required field to copy the full url for your application click on the `here` button as shown below
+![daB - Google Chrome 1_7_2024 2_18_23 PM](https://github.com/shady-cj/dummy_api_builder/assets/66220414/a0785efd-58e1-414d-8cd1-3586fc958c49)
+
+
+
+
+
 
 
 
