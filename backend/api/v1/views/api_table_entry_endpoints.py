@@ -290,15 +290,13 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
         tableKeyName = f"{api_name}.{model_name}"
         # rel_key = db.session(Relationship).filter(Relationship.fk_rel.like(f"{tableKeyName}%"), Relationship.entry_ref_pk=e_list.primary_key_value).first()
         rels = Relationship.query.filter(Relationship.fk_rel.startswith(f"{tableKeyName}"), Relationship.entry_ref_pk==e_list.primary_key_value)
-        rel_list = []
+        rel_key_data = {} # format {"posts":[..]}
         for rel in rels:
-            rel_key_data = {} # format [{"posts":[..]}]
             rel_key_data[rel.fk_model_name] = []
             for e_list_rel in rel.entrylists:
                 rel_data = {}
                 for ent in e_list_rel.entries:
                     rel_data[ent.tableparameter.name] = int(ent.value) if ent.tableparameter.data_type.name == "integer" else ent.value
                 rel_key_data[rel.fk_model_name].append(rel_data)
-            rel_list.append(rel_key_data)
-        data["relationships"] = rel_list
+        data["relationships"] = rel_key_data
         return jsonify(data), 200
