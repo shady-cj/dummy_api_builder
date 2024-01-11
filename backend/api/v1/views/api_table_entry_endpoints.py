@@ -4,6 +4,7 @@ e.g name="peter"
 age=12
 etc..
 """
+from dateutil.parser import parse
 from api.v1.views import app_views
 from flask import request, jsonify, make_response
 from api.v1.auth.auth import login_required
@@ -101,14 +102,21 @@ def add_list_entry(api_token, api_name, model_name):
                 return jsonify({"error": f"max length of '{entry_name}' exceeded"}), 400
             if tbl_p.primary_key:
                 primary_keys.append({"id": tbl_p.id, "value": entry_value})
+            if tbl_p.data_type.name == "datetime":
+                parsed_value = parse(entry_value)
+                entry_value = parsed_value
+            if tbl_p.data_type.name == "date":
+                parsed_value = parse(entry_value)
+                entry_value = parsed_value.date()
             e = Entry(value=entry_value, tableparameter_id=tbl_p.id, entry_list_id=e_list.id)
+            foreignKey_model_name = f"{api.name.lower()}_{table.name.lower()}s"
             if const_type == "fk":
-                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = entry_value, fk_model_name=f"{table.name.lower()}s").first()
+                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = entry_value, fk_model_name=foreignKey_model_name).first()
                 if relationship:
                     relationship.entrylists.append(e_list)
                 else:
                     try:
-                        relationship = Relationship(entry_ref_pk=entry_value, fk_rel=rel_key, fk_model_name=f"{table.name.lower()}s")
+                        relationship = Relationship(entry_ref_pk=entry_value, fk_rel=rel_key, fk_model_name=foreignKey_model_name)
                         relationship.entrylists.append(e_list)
                         db.session.add(relationship)
                     except:
@@ -222,10 +230,17 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                 continue
             if tbl_p.primary_key:
                 primary_keys.append({"id": tbl_p.id, "value": entry_value})
+            if tbl_p.data_type.name == "datetime":
+                parsed_value = parse(entry_value)
+                entry_value = parsed_value
+            if tbl_p.data_type.name == "date":
+                parsed_value = parse(entry_value)
+                entry_value = parsed_value.date()
             e = Entry.query.filter_by(tableparameter_id=tbl_p.id, entry_list_id=e_list.id).first() # Grab the entry to be updated
+            foreignKey_model_name = f"{api.name.lower()}_{table.name.lower()}s"
             if e:
                 # If the entry exists update the value
-                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = e.value, fk_model_name=f"{table.name.lower()}s").first() 
+                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = e.value, fk_model_name=foreignKey_model_name).first() 
                 # remove the previous value from the relationship before updating it
                 if relationship:
                     relationship.entrylists.remove(e_list)
@@ -234,12 +249,12 @@ def update_delete_retrieve_entry(api_token, api_name, model_name, model_id):
                 # in the event where there is no entry (as a result of previous nullable constraints)
                 e = Entry(value=entry_value, tableparameter_id=tbl_p.id, entry_list_id=e_list.id)
             if const_type == "fk":
-                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = entry_value, fk_model_name=f"{table.name.lower()}s").first()
+                relationship = Relationship.query.filter_by(fk_rel = rel_key, entry_ref_pk = entry_value, fk_model_name=foreignKey_model_name).first()
                 if relationship:
                     relationship.entrylists.append(e_list)
                 else:
                     try:
-                        relationship = Relationship(entry_ref_pk=entry_value, fk_rel=rel_key, fk_model_name=f"{table.name.lower()}s")
+                        relationship = Relationship(entry_ref_pk=entry_value, fk_rel=rel_key, fk_model_name=foreignKey_model_name)
                         relationship.entrylists.append(e_list)
                         db.session.add(relationship)
                     except:
