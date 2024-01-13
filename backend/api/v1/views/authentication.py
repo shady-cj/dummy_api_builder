@@ -47,19 +47,28 @@ def login():
         return jsonify({'error': 'Incorrect email or password'}), 401
     if check_password_hash(user.password, password):
         # Generates new public_id after every login
+        if user.public_id:
+            last_created = user.last_public_id_created
+        #     # check if the last public key created is more than 3 days
+            if not last_created or datetime.now() > (last_created + timedelta(days=3)):
+                new_public_id = None
+            else:
+                new_public_id = user.public_id
 
-        while True:
-            # Ensuring public_id is unique before updating
-            new_public_id = str(uuid.uuid4())
-            check_associated_public_id = User.query.filter_by(public_id = new_public_id).first()
-            if not check_associated_public_id:
-                break
-        
-        from api.v1.app import app
-        user.public_id = new_public_id
-        db.session.commit()
-
+        if new_public_id is None:
+            while True:
+                # Ensuring public_id is unique before updating
+                new_public_id = str(uuid.uuid4())
+                check_associated_public_id = User.query.filter_by(public_id = new_public_id).first()
+                if not check_associated_public_id:
+                    break
+            
+            user.public_id = new_public_id
+            user.last_public_id_created = datetime.now()
+            db.session.commit()
         # Create jwt token
+        from api.v1.app import app
+
         token = jwt.encode({
             'public_id': new_public_id,
             'exp': datetime.utcnow() + timedelta(minutes=60)

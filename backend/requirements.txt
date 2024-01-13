@@ -4,3 +4,4 @@ Flask-SQLAlchemy==3.0.3
 python-dotenv
 python-dateutil
 flask-cors
+Flask-Migrate
