@@ -2,6 +2,7 @@
 @import "styles/variables";
 @import "styles/reset.scss";
 @import "./styles/mixins";
+
 section.my_api_body {
     @include MainPageDefault;
     display: flex;

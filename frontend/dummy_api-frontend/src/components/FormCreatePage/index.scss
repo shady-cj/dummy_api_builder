@@ -1,32 +1,40 @@
 @import "../../styles/variables";
 @import "../../styles/mixins";
+
 div.create-wrapper {
-    flex-basis: 70%;
+    height: 100%;
     padding: 1.5rem 0.8rem;
     color: $primary_color;
+
     section.create_header {
         width: 100%;
+
         h2 {
             padding: 0;
             margin: 0;
             font-size: 1rem;
         }
+
         margin-bottom: 1.5rem;
     }
+
     section.create_form {
         width: 100%;
         padding: 1rem 0;
         height: 85%;
         overflow-y: auto;
         @include scrollbar;
+
         form {
             display: flex;
             flex-flow: column;
             align-items: center;
             gap: 1rem;
+
             div {
                 @include basic_form_div;
             }
+
             button {
                 width: 45%;
                 padding: 0.6rem 0;
@@ -40,9 +48,11 @@ div.create-wrapper {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
                 &:hover {
                     background-color: lighten($primary_color, 10%);
                 }
+
                 .api-create_spinner {
                     display: flex;
                     justify-content: center;
@@ -50,7 +60,12 @@ div.create-wrapper {
                     margin: 0;
                     padding: 0;
                 }
+
+                @media screen and (max-width: 768px) {
+                    width: 45vw;
+                }
             }
+
             .api_create_error_card {
                 @include basic_error_card;
             }

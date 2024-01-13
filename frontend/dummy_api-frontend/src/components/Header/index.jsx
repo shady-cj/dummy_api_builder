@@ -10,6 +10,7 @@ import Cookies from 'js-cookie'
 const Index = ({ navs, activeNav, type }) => {
     const { user } = useContext(AppContext);
     const [openUserInfo, setOpenUserInfo] = useState(false)
+    const [openNav, setOpenNav] = useState(false)
 
     const navigate = useNavigate();
     const copyTextToClipboard = async (text) => {
@@ -58,11 +59,48 @@ const Index = ({ navs, activeNav, type }) => {
 
                         </li>
                     }
+
                 </ul>
+                <div onClick={() => setOpenNav(prevNav => !prevNav)} className={`menu-icon ${openNav ? `slide-out` : ''}`}>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
 
+            <nav className={`${openNav ? '' : 'close'}`}>
+                <ul>
 
-        </header>
+                    {navs?.map((nav, index) => {
+
+                        return (<li key={index} className={nav.title === activeNav ? "nav-active" : undefined}>
+                            <Link to={nav.path}>{nav.title}</Link>
+                        </li>)
+                    })}
+                    {
+                        type === "landing" && <li> <a href='https://github.com/shady-cj/dummy_api_builder/tree/main' target="_blank" rel="noreferrer"> DOCS </a></li>
+                    }
+                    {
+                        type === "apis" && <><li style={{ textDecoration: "none" }}><h3>{user?.email}</h3>
+                            <p><span onClick={(e) => {
+                                copyTextToClipboard(user?.api_token)
+                                e.target.textContent = "copied"
+                                setTimeout(() => {
+                                    e.target.textContent = "copy"
+                                }, 3000)
+                            }
+                            }>copy</span></p></li>
+                            <li style={{ textDecoration: "none" }}>
+                                <button onClick={() => {
+                                    Cookies.remove("token", { path: '/' })
+                                    navigate('/login')
+                                }}>Log out</button>
+                            </li>
+                        </>
+                    }
+                </ul>
+            </nav>
+        </header >
     )
 }
 

@@ -1,40 +1,52 @@
 @import "../../styles/variables";
 @import "../../styles/mixins";
+
 div.model-create__wrapper {
-    flex-basis: 70%;
     padding: 1.5rem 0.8rem;
     position: relative;
     overflow: hidden;
+    height: 100%;
+
     h2 {
         padding: 0;
         margin: 0;
         margin-bottom: 1rem;
         color: $primary_color;
         font-size: 1rem;
+
     }
+
     section.model-create__form {
         margin: 1rem 0;
         padding: 1rem 0;
         height: 95%;
         overflow-y: auto;
         @include scrollbar;
+
         form {
             display: flex;
             flex-direction: column;
             color: $primary_color;
             align-items: center;
             gap: 1rem;
+
             .model-form_main {
                 width: 100%;
                 margin-bottom: 1rem;
+                margin-trim: block-end;
+
                 div {
                     @include basic_form_div;
+                    margin-bottom: 1rem;
+
                     label {
                         font-size: 0.6rem;
                     }
+
                     input {
                         font-size: 0.5rem;
                     }
+
                     small {
                         font-size: 0.55rem;
                         font-weight: 300;
@@ -42,36 +54,57 @@ div.model-create__wrapper {
                     }
                 }
             }
+
             .model-form_fields {
                 width: 100%;
+
                 .model-form_fields_wrapper {
                     display: flex;
                     flex-direction: column;
                     align-items: center;
                     gap: 0.5em;
                     font-size: 0.65rem;
+
+
+
                     section {
                         width: 100%;
                         padding: 1rem;
+
+                        margin-trim: block-end;
+
                         border: {
                             bottom: 1px solid;
                         }
+
                         border-color: $primary_color;
+
                         h5 {
                             font-size: 0.8rem;
                             margin-bottom: 1rem;
                         }
+
                         div {
                             display: flex;
                             flex-direction: row;
                             align-items: center;
                             gap: 1rem;
                             padding: 0.5rem 0.7rem;
+
+                            @media screen and (max-width: 768px) {
+                                flex-direction: column;
+                                align-items: flex-start;
+                                margin-bottom: 0.4rem;
+                                gap: 0.5rem;
+                            }
+
+
                             label {
                                 flex-basis: 30%;
                                 font-weight: 400;
                                 font-size: 0.6rem;
                             }
+
                             input,
                             select {
                                 flex-basis: 40%;
@@ -79,6 +112,7 @@ div.model-create__wrapper {
                                 border: 1px solid $primary_color;
                                 border-radius: 5px;
                                 transition: 0.5s ease-in;
+
                                 &:focus,
                                 &:active {
                                     outline: none;
@@ -88,6 +122,7 @@ div.model-create__wrapper {
                         }
                     }
                 }
+
                 button {
                     padding: 0.35rem 0.8rem;
                     margin: 0.5rem 0;
@@ -98,16 +133,21 @@ div.model-create__wrapper {
                     background-color: $primary_color;
                     cursor: pointer;
                     transition: 0.5s ease-out;
+
                     &:hover,
                     &:active {
                         outline: none;
                         background-color: lighten($primary_color, 10%);
                     }
+
+
                 }
             }
+
             .model_create_error_card {
                 @include basic_error_card;
             }
+
             button.model-submit_btn {
                 width: 45%;
                 padding: 0.6rem 0;
@@ -121,15 +161,21 @@ div.model-create__wrapper {
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
                 &:hover {
                     background-color: lighten($primary_color, 10%);
                 }
+
                 .model-create_spinner {
                     padding: 0;
                     margin: 0;
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                }
+
+                @media screen and (max-width: 768px) {
+                    width: 45vw;
                 }
             }
         }

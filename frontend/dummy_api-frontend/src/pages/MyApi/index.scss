@@ -1,4 +1,5 @@
 @import "../../styles/variables";
+
 .loading-wrapper {
     flex-basis: 70%;
     height: 100%;
@@ -6,4 +7,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.api_info_body {
+    flex-basis: 70%;
+    height: 100%;
+    width: 100%;
+
+    @media screen and (max-width: 768px) {
+        flex-basis: 100%;
+    }
+}
+
+.hide_on_smalldevice {
+    @media screen and (max-width: 768px) {
+        display: none !important;
+    }
 }

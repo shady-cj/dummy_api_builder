@@ -14,6 +14,12 @@ html {
     font-size: 1.5rem;
 }
 
+body,
+html {
+    width: 100vw;
+    overflow-x: hidden;
+}
+
 input {
     font-family: $sora_font;
 }

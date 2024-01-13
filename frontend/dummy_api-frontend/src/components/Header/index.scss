@@ -1,15 +1,137 @@
 @import "../../styles/variables";
+
 header {
-    width: 100%;
+    width: 100vw;
     height: 2.5rem;
-    min-width: 500px;
     background-color: $primary_color;
+    position: relative;
+
+
+    nav {
+        position: absolute;
+        top: 100%;
+        width: 100vw;
+        height: auto;
+        background-color: lighten($primary_color_light, 10%);
+        z-index: 1;
+        padding: 1rem 0;
+        opacity: 1;
+        transition: opacity 0.6s;
+
+        ul {
+            display: flex;
+            flex-direction: column;
+            padding: 0;
+            margin: 0;
+            gap: 0.5rem;
+            justify-content: center;
+            list-style: none;
+
+            li {
+                text-align: center;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-decoration: underline;
+
+                a {
+                    font-size: 0.68rem;
+                    color: white;
+                    padding: 0.4em;
+                    cursor: pointer;
+                    transition: color 0.4s ease-in-out;
+                    text-decoration: none;
+
+                    &:hover,
+                    &:active,
+                    &:focus {
+                        color: darken(white, 8%);
+                    }
+                }
+
+                h3 {
+                    font-size: 0.65rem;
+                }
+
+                p {
+                    font-size: 0.6rem;
+
+                    gap: 1rem;
+                    margin-left: 1rem;
+
+                    span {
+                        color: $secondary_color;
+                        cursor: pointer;
+                        white-space: nowrap;
+                    }
+                }
+
+                button {
+                    margin-top: 0.5rem;
+                    padding: 0.24rem 0.4rem;
+                    color: white;
+                    background-color: red;
+                    border: none;
+                    border-radius: 5px;
+                    cursor: pointer;
+                    transition: 0.4s ease-in;
+
+                    &:hover {
+                        background-color: darken(red, 10%);
+                    }
+                }
+            }
+
+            .nav-active {
+                background-color: white;
+                padding: 0.1em 0.25em;
+                border-radius: 4px;
+                transition: background-color 0.4s ease-in;
+                text-decoration: none;
+
+                a {
+                    color: $primary_color;
+
+                    &:hover,
+                    &:active,
+                    &:focus {
+                        color: darken($primary_color, 8%);
+                    }
+                }
+
+                &:hover {
+                    background-color: darken(white, 5%);
+                }
+            }
+
+        }
+    }
+
+    nav.close {
+        height: 0;
+        padding: 0;
+        opacity: 0;
+
+        ul {
+            li {
+                transform: scale(0)
+            }
+
+
+        }
+
+
+    }
+
     div {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
         padding: 0.3rem;
+
+
+
         img {
             margin-left: 1rem;
             width: 40px;
@@ -17,6 +139,7 @@ header {
             cursor: pointer;
             // margin-right: auto;
         }
+
         ul {
             display: flex;
             flex-flow: row nowrap;
@@ -26,11 +149,17 @@ header {
             gap: 0.5rem;
             padding-right: 1.5rem;
             list-style: none;
+
+            @media screen and (max-width: 768px) {
+                display: none;
+            }
+
             li {
                 text-align: center;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+
                 a {
                     font-size: 0.68rem;
                     color: white;
@@ -38,26 +167,32 @@ header {
                     cursor: pointer;
                     transition: color 0.4s ease-in-out;
                     text-decoration: none;
+
                     &:hover,
                     &:active,
                     &:focus {
                         color: darken(white, 8%);
                     }
                 }
+
                 img {
                     width: 20px;
                     margin-left: 0;
+
                     &:last-of-type {
                         width: 10px;
                         cursor: pointer;
+
                         margin: {
                             left: 0.25rem;
                             top: 0.2rem;
                         }
                     }
                 }
+
                 &:last-of-type {
                     position: relative;
+
                     div {
                         opacity: 0;
                         position: absolute;
@@ -76,29 +211,35 @@ header {
                         font-family: $roboto_font;
                         animation: fade-in 0.4s ease-in;
                         animation-fill-mode: forwards;
+
                         @keyframes fade-in {
                             0% {
                                 opacity: 0
                             }
+
                             100% {
                                 opacity: 1;
                             }
                         }
+
                         h3 {
                             font-size: 0.65rem;
                         }
+
                         p {
                             font-size: 0.6rem;
                             display: flex;
                             justify-content: space-between;
                             text-align: left;
                             gap: 0.4rem;
+
                             span {
                                 color: $secondary_color;
                                 cursor: pointer;
                                 white-space: nowrap;
                             }
                         }
+
                         button {
                             margin-top: 0.5rem;
                             padding: 0.24rem 0.4rem;
@@ -108,6 +249,7 @@ header {
                             border-radius: 5px;
                             cursor: pointer;
                             transition: 0.4s ease-in;
+
                             &:hover {
                                 background-color: darken(red, 10%);
                             }
@@ -115,22 +257,80 @@ header {
                     }
                 }
             }
+
             .nav-active {
                 background-color: white;
                 padding: 0.1em 0.25em;
                 border-radius: 4px;
                 transition: background-color 0.4s ease-in;
+
                 a {
                     color: $primary_color;
+
                     &:hover,
                     &:active,
                     &:focus {
                         color: darken($primary_color, 8%);
                     }
                 }
+
                 &:hover {
                     background-color: darken(white, 5%);
                 }
+            }
+        }
+
+        .menu-icon {
+            display: none;
+            margin-right: 1rem;
+            position: relative;
+
+            span {
+                position: absolute;
+                top: 30%;
+                left: -100%;
+                margin: 4px 0;
+                display: block;
+                width: 8vw;
+                height: 1vw;
+                background-color: white;
+                border-radius: 10px;
+            }
+
+            :nth-child(1) {
+                transform: translateX(0);
+                transition: transform 0.8s ease-in-out;
+            }
+
+            :nth-child(2) {
+                transform: translateY(200%) rotate(0);
+                transition-delay: 0.5s;
+                transition: transform 0.5s ease-in-out;
+            }
+
+            :nth-child(3) {
+                transform: translateY(-200%) rotate(0);
+                transition-delay: 0.5s;
+                transition: transform 0.5s ease-in-out;
+            }
+
+
+            @media screen and (max-width: 768px) {
+                display: block;
+            }
+        }
+
+        .menu-icon.slide-out {
+            span:nth-child(1) {
+                transform: translateX(10000%);
+            }
+
+            :nth-child(2) {
+                transform: translateY(0) rotate(45deg);
+            }
+
+            :nth-child(3) {
+                transform: translateY(0) rotate(-45deg);
             }
         }
     }
