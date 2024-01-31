@@ -12,6 +12,7 @@ const Index = () => {
     const location = useLocation();
     const locationPathname = location.pathname.split('/')
     const params = useParams();
+    const my_api_page = ["/my_apis/", "/my_apis"].includes(location.pathname)
     if (!token) {
         return <Navigate to="/login" state={{ path: location.pathname }} replace={true} />
     }
@@ -45,8 +46,10 @@ const Index = () => {
         <div>
             <Header navs={navs} activeNav={activeNav} type="apis" />
             <section className="my_api_body">
-                <Sidebar createApiPage={createApiPage} activeID={params?.apiId} />
-                <Outlet />
+                <Sidebar createApiPage={createApiPage} activeID={params?.apiId} my_api_page={my_api_page} />
+                <div className={`api_info_body ${my_api_page && "hide_on_smalldevice"}`}>
+                    <Outlet />
+                </div>
             </section>
         </div>
     )

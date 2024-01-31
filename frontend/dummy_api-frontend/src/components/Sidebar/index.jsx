@@ -7,13 +7,13 @@ import { useContext } from "react"
 import { AppContext } from "../../context"
 import { Bars } from "react-loader-spinner"
 
-const Index = ({ activeID, createApiPage }) => {
+const Index = ({ activeID, createApiPage, my_api_page }) => {
     const navigate = useNavigate();
     const { apis, apiLoading } = useContext(AppContext)
 
 
     return (
-        <div className="sidebar_wrapper">
+        <div className={`sidebar_wrapper ${!my_api_page && "hide_on_smalldevice"}`}>
             <section className='my_api_header'>
                 <h2>MY APIs</h2> <img src={caretLogo} />
             </section>
@@ -31,6 +31,7 @@ const Index = ({ activeID, createApiPage }) => {
                     />
                 </section> : <section className='my_api_list'>
                     {
+
                         apis && apis.map((api) => {
                             return <article key={api.id} className={`${api.id === +activeID ? 'sidebar_active' : undefined}`} onClick={() => navigate(`/my_apis/${api.id}`)}>
                                 {api.name}

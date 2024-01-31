@@ -2,11 +2,12 @@
 @import "../../styles/mixins";
 
 div.test_endpoint-wrapper {
-    flex-basis: 70%;
     padding: 1.5rem 0.8rem;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
     overflow-y: auto;
+    width: 100%;
+    height: calc(100vh - 4.5rem);
     @include scrollbar;
 
     h2 {
@@ -18,7 +19,13 @@ div.test_endpoint-wrapper {
     }
 
     section {
-        margin: 3rem;
+        margin: 2rem;
+    }
+
+    @media screen and (max-width: 768px) {
+        section {
+            margin: 0.8rem;
+        }
     }
 
     .endpoint_info {
@@ -30,6 +37,7 @@ div.test_endpoint-wrapper {
             padding: 0.5rem 0;
             padding-top: 0;
             line-height: 1rem;
+            overflow-wrap: break-word;
 
             a {
                 text-decoration: underline;
@@ -134,6 +142,8 @@ div.test_endpoint-wrapper {
             font-size: 0.5rem;
             line-height: 1rem;
             font-family: monospace;
+            width: 100%;
+            overflow-x: auto;
         }
     }
 }
