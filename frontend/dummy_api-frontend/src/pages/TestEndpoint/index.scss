@@ -4,9 +4,10 @@
 div.test_endpoint-wrapper {
     padding: 1.5rem 0.8rem;
     position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
     overflow-y: auto;
     width: 100%;
+    height: calc(100vh - 4.5rem);
     @include scrollbar;
 
     h2 {
@@ -141,6 +142,8 @@ div.test_endpoint-wrapper {
             font-size: 0.5rem;
             line-height: 1rem;
             font-family: monospace;
+            width: 100%;
+            overflow-x: auto;
         }
     }
 }

@@ -37,6 +37,7 @@ const Index = () => {
     }
 
     const handleSubmit = async (e) => {
+
         e.preventDefault()
         setResponse(null)
         if (!endpointParam.api || !endpointParam.model) {
@@ -47,7 +48,6 @@ const Index = () => {
 
             if (!endpointParam.data) return;
             try {
-
                 const data = JSON.parse(endpointParam.data.trim())
 
                 const resp = await fetch(fullUrlPath, {
@@ -62,23 +62,30 @@ const Index = () => {
                 const resp_data = await resp.json()
                 setResponse(resp_data)
             } catch (err) {
+                setResponse(err.message)
                 return;
             }
 
 
         }
         else {
-            if (endpointParam.query_params) fullUrlPath = `${fullUrlPath}?${endpointParam.query_params}`
-            const resp = await fetch(fullUrlPath, {
-                method: endpointParam.method
-            })
-            if (resp.status == 204) {
-                setResponse({ "message": "Deleted Successfully" })
-                return;
-            }
-            const resp_data = await resp.json()
+            try {
 
-            setResponse(resp_data)
+                if (endpointParam.query_params) fullUrlPath = `${fullUrlPath}?${endpointParam.query_params}`
+                const resp = await fetch(fullUrlPath, {
+                    method: endpointParam.method
+                })
+                if (resp.status == 204) {
+                    setResponse({ "message": "Deleted Successfully" })
+                    return;
+                }
+                const resp_data = await resp.json()
+
+                setResponse(resp_data)
+            }
+            catch (err) {
+                setResponse(err)
+            }
         }
 
 
@@ -135,7 +142,9 @@ const Index = () => {
                 response && <section className="response_section">
                     <h2>Response</h2>
                     <div className="response_data">
-                        {JSON.stringify(response, undefined, 2)}
+                        <pre>
+                            {JSON.stringify(response, undefined, 3)}
+                        </pre>
                     </div>
                 </section>
             }

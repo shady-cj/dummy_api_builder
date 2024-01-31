@@ -20,6 +20,10 @@
             width: clamp(8rem, 25%, 13rem);
             height: auto;
             object-fit: cover;
+
+            @media screen and (max-width: 768px) {
+                margin-top: -2.2rem;
+            }
         }
 
         section {

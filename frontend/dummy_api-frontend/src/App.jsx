@@ -17,7 +17,7 @@ function App() {
   ]
   return (
     <>
-      <div>
+      <div className='main-container'>
         <Header navs={navs} type="landing" />
         <main className='landing-main-block'>
           <Hero />

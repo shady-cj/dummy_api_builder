@@ -73,7 +73,7 @@ const Index = ({ navs, activeNav, type }) => {
 
                     {navs?.map((nav, index) => {
 
-                        return (<li key={index} className={nav.title === activeNav ? "nav-active" : undefined}>
+                        return (<li onClick={() => setOpenNav(prevNav => !prevNav)} key={index} className={nav.title === activeNav ? "nav-active" : undefined}>
                             <Link to={nav.path}>{nav.title}</Link>
                         </li>)
                     })}
