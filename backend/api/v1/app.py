@@ -5,15 +5,11 @@ from dotenv import load_dotenv
 load_dotenv()
 from api.v1.views import app_views
 from flask_migrate import Migrate
-app = Flask(__name__)
-app.url_map.strict_slashes = False
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Database.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-app.config['SECRET_KEY'] = os.getenv('SECRET')
+from . import create_app
+app = create_app()
 
 app.register_blueprint(app_views)
 CORS(app)
-from models import db
 migrate = Migrate()
 
 
