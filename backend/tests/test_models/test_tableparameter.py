@@ -78,6 +78,20 @@ class TestTableParameter(TestConfig):
                 self.db.session.add(tb_name)
                 self.db.session.commit()
 
+    def test_create_invalid_tb(self):
+        """
+        Test creation of table parameter with invalid datatype
+        """
+
+        with self.app.app_context():
+            self.tb_setup()
+            with self.assertRaises(LookupError) as e:
+                new_Tb_age = TableParameter(name="age", data_type="int", table_id=self.table1.id)
+                
+                self.db.session.add(new_Tb_age)
+                self.db.session.commit()
+                self.assertEqual(new_Tb_age.data_type, "int")
+
     def test_create_tb_with_pk(self):
         """
         Test creation of table parameter with no name expect an error
