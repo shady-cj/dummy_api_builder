@@ -1,5 +1,5 @@
 """
-Testing tableparameter model
+Testing entrylist model
 """
 
 from tests import TestConfig
@@ -15,7 +15,7 @@ import sqlalchemy
 # class TableParameterContext()
 class TestTableParameter(TestConfig):
     """
-      Full test on the Table Parameter model
+      Full test on the Entrylist model
     """
     def setUp(self):
         super().setUp()
