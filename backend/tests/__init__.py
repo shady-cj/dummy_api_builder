@@ -1,14 +1,16 @@
-from api.v1 import create_app
-from models import db
+from api.v1.app import app
+from run import db
+
 from unittest import TestCase
 
 
 class TestConfig(TestCase):
     def setUp(self):
-        self.app = create_app("test")
+        self.app = app
         self.db = db
+        self.client = self.app.test_client()
         
-        self.db.init_app(self.app)
+        # self.db.init_app(self.app)
 
         with self.app.app_context():
             self.db.create_all()

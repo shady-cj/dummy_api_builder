@@ -1,7 +1,8 @@
 
 from flask import Flask
 import os
-def create_app(env=None):
+def create_app():
+    env = os.environ.get("APP_ENVIRON")
     app = Flask(__name__)
     app.url_map.strict_slashes = False
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///Test.db' if env == "test" else 'sqlite:///Database.db'
