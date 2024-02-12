@@ -15,6 +15,8 @@ import jwt
 def signup():
    
     data = request.get_json()
+    if not data:
+        print("error")
     email = data.get('email')
     password = data.get('password')
     confirm_password = data.get('confirm_password')
