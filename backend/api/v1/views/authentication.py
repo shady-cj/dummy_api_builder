@@ -47,16 +47,14 @@ def login():
     user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({'error': 'Incorrect email or password'}), 401
+    new_public_id = None
     if check_password_hash(user.password, password):
         # Generates new public_id after every login
         if user.public_id:
             last_created = user.last_public_id_created
-        #     # check if the last public key created is more than 3 days
-            if not last_created or datetime.now() > (last_created + timedelta(days=3)):
-                new_public_id = None
-            else:
+            # check if the last public key created is not more than 3 days
+            if last_created and datetime.now() < (last_created + timedelta(days=1)):
                 new_public_id = user.public_id
-
         if new_public_id is None:
             while True:
                 # Ensuring public_id is unique before updating
