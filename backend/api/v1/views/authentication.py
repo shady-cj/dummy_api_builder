@@ -72,7 +72,8 @@ def login():
         token = jwt.encode({
             'public_id': new_public_id,
             'exp': datetime.utcnow() + timedelta(minutes=60)
-        }, app.config['SECRET_KEY'])
+        }, app.config['SECRET_KEY'], algorithm="HS256")
+        
         return jsonify({'token': token.decode('utf-8')}), 200
     return jsonify({'error': 'Incorrect email or password'}), 401
 

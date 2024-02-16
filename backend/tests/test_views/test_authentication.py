@@ -223,9 +223,13 @@ class TestLogin(TestConfig):
             # capture public_id for second session
             p_id2 = User.query.filter_by(email="johndoe@mail.com").first().public_id
 
+
             for session in [session1, session2]:
                 self.assertEqual(session1.status_code, 200)
                 self.assertTrue(session2.json["token"])
+            
+            # Confirm tokens are different
+            self.assertNotEqual(session2.json["token"], session1.json["token"])
             
             
             #confirm public ids are same
@@ -267,4 +271,152 @@ class TestLogin(TestConfig):
 
 
 
+class TestLoginRequiredAndUserDetails(TestConfig):
+    """
+    Testing the login required util function and getting user detail endpoint
+    """
+    def setUp(self):
+        self.endpoint = "api/v1/me"
+        super().setUp()
+        self.data1 = {"email":"johndoe@mail.com", "password": "123456789"}
+        self.data2 = {"email":"testuser@mail.com", "password": "password"}
+        self.user1 = self.client.post("api/v1/signup", json={"email":"johndoe@mail.com", "password": "123456789", "confirm_password": "123456789"})
+        self.user2 = self.client.post("api/v1/signup", json={"email":"testuser@mail.com", "password": "password", "confirm_password": "password"})
+        self.session1 = self.client.post("api/v1/login", json=self.data1)
+        self.session2 = self.client.post("api/v1/login", json=self.data2)
+    
+
+    def test_user_detail_endpoint_with_wrong_method(self):
+        """
+         Testing the user detail endpoint with the wrong the request method
+        """
+
+        resp1 = self.client.post(self.endpoint)
+        resp2 = self.client.put(self.endpoint)
+        resp3 = self.client.delete(self.endpoint)
+        resp4 = self.client.patch(self.endpoint)
+
+        for res in [resp1, resp2, resp3, resp4]:
+            self.assertEqual(res.status_code, 405)
+            self.assertRegex(res.data.decode('utf-8'), r".*Method Not Allowed.*")
+
+    def test_user_detail_endpoint_without_tokens(self):
+        """
+        Test the user detail endpoint without token, this test indirectly tests the login_required util function
+        """
+        expected_err_msg = "Token is missing"
+        res = self.client.get(self.endpoint)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.json["error"], expected_err_msg)
+
+    def test_user_detail_endpoint_with_invalid_token(self):
+        """
+        Test user detail endpoint with a token, but invalid token!!!
+        """
+        expected_err_msg = "Token is invalid !!"
+        res = self.client.get(self.endpoint, headers={'x-access-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.kOTEyYjM2Zi0wN2FiLTQxNTktOTM4MC1lNjM5OGQwMDdjOWEiLCJleHAiOjE3MDc5OTk2NjB9.vfEn1LM86K8PLJ3VgDLhQW6xzbXfFOczFYruCNMTLwA'})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.json["error"], expected_err_msg)
+    
+    def test_user_detail_endpoint_with_wrong_token(self):
+        """
+        Test user detail endpoint with a token that is valid jwt but wrong
+        """
+        expected_err_msg = "invalid credentials, please log in or create an account"
+        res = self.client.get(self.endpoint, headers={'x-access-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI1MDQ2M2MzNy03NjNiLTQzZTAtOThlMy1jNDFmN2ZiZTBlODAiLCJleHAiOjE3MDgwOTIzNjJ9.8nc6Xo3UEZL_9sucvf77qtwhFSvLemEuBheaNpNM2ak'})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.json["error"], expected_err_msg)
+
+    
+    def test_user_detail_endpoint_with_correct_token(self):
+        """
+        Getting user details succesfully with the correct token
+        """
+        resp1 = self.client.get(self.endpoint, headers={'x-access-token': self.session1.json["token"]})
+        resp2 = self.client.get(self.endpoint, headers={'x-access-token': self.session2.json["token"]})
+        for res in [resp1, resp2]:
+            self.assertEqual(res.status_code, 200)
+        self.assertEqual(resp1.json["email"], self.data1["email"])
+        self.assertEqual(resp2.json["email"], self.data2["email"])
+
+        with self.app.app_context():
+            u1 = User.query.filter_by(email=self.data1["email"]).first()
+            u2 = User.query.filter_by(email=self.data2["email"]).first()
+            self.assertEqual(u1.api_token, resp1.json["api_token"])
+            self.assertEqual(u2.api_token, resp2.json["api_token"])
+
+
+class TestLogoutView(TestConfig):
+    """
+    Testing the logout view
+    """
+    def setUp(self):
+        self.endpoint = "api/v1/logout"
+        super().setUp()
+        self.data1 = {"email":"johndoe@mail.com", "password": "123456789"}
+        self.data2 = {"email":"testuser@mail.com", "password": "password"}
+        self.user1 = self.client.post("api/v1/signup", json={"email":"johndoe@mail.com", "password": "123456789", "confirm_password": "123456789"})
+        self.user2 = self.client.post("api/v1/signup", json={"email":"testuser@mail.com", "password": "password", "confirm_password": "password"})
+        self.session1 = self.client.post("api/v1/login", json=self.data1)
+        self.session2 = self.client.post("api/v1/login", json=self.data2)
+    
+
+    def test_user_detail_endpoint_with_wrong_method(self):
+        """
+         Testing the logout endpoint with the wrong the request method
+        """
+
+        resp1 = self.client.get(self.endpoint)
+        resp2 = self.client.put(self.endpoint)
+        resp3 = self.client.delete(self.endpoint)
+        resp4 = self.client.patch(self.endpoint)
+
+        for res in [resp1, resp2, resp3, resp4]:
+            self.assertEqual(res.status_code, 405)
+            self.assertRegex(res.data.decode('utf-8'), r".*Method Not Allowed.*")
+
+    def test_logout_endpoint_without_tokens(self):
+        """
+        Test the logout endpoint without token, this test indirectly tests the login_required util function
+        """
+        expected_err_msg = "Token is missing"
+        res = self.client.post(self.endpoint)
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.json["error"], expected_err_msg)
+
+    def test_logout_endpoint_with_invalid_token(self):
+        """
+        Test logout endpoint with a token, but invalid token!!!
+        """
+        expected_err_msg = "Token is invalid !!"
+        res = self.client.post(self.endpoint, headers={'x-access-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.kOTEyYjM2Zi0wN2FiLTQxNTktOTM4MC1lNjM5OGQwMDdjOWEiLCJleHAiOjE3MDc5OTk2NjB9.vfEn1LM86K8PLJ3VgDLhQW6xzbXfFOczFYruCNMTLwA'})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.json["error"], expected_err_msg)
+    
+    def test_logout_endpoint_with_wrong_token(self):
+        """
+        Test logout endpoint with a token that is valid jwt but wrong
+        """
+        expected_err_msg = "invalid credentials, please log in or create an account"
+        res = self.client.post(self.endpoint, headers={'x-access-token': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJwdWJsaWNfaWQiOiI1MDQ2M2MzNy03NjNiLTQzZTAtOThlMy1jNDFmN2ZiZTBlODAiLCJleHAiOjE3MDgwOTIzNjJ9.8nc6Xo3UEZL_9sucvf77qtwhFSvLemEuBheaNpNM2ak'})
+        self.assertEqual(res.status_code, 401)
+        self.assertEqual(res.json["error"], expected_err_msg)
+    
+    def test_logout_endpoint_with_correct_token(self):
+        """
+        Test logging out succesfully with the correct token
+        """
+        resp1 = self.client.post(self.endpoint, headers={'x-access-token': self.session1.json["token"]})
+        resp2 = self.client.post(self.endpoint, headers={'x-access-token': self.session2.json["token"]})
+        for res in [resp1, resp2]:
+            self.assertEqual(res.status_code, 200)
+            self.assertEqual(res.json["message"], "Logged out")
         
+
+        with self.app.app_context():
+            u1 = User.query.filter_by(email=self.data1["email"]).first()
+            u2 = User.query.filter_by(email=self.data2["email"]).first()
+            self.assertIsNone(u1.public_id)
+            self.assertIsNone(u2.public_id)
+
+    
